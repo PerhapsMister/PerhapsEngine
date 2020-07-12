@@ -10,18 +10,6 @@
 const int width = 1280, height = 720;
 const char* title = "Perhaps Engine";
 
-void PrintMethod(MonoString* string)
-{
-	char* cppString = mono_string_to_utf8(string);
-
-	std::cout << cppString;
-
-	mono_free(cppString);
-}
-
-const char* AssembliesFolder = "MonoRuntime/Managed";
-const char* EtcFolder = "MonoRuntime/etc";
-
 class PerhapsEngine
 {
 public:
@@ -37,7 +25,7 @@ private:
 
 	PerhapsEngine()
 	{
-
+		
 	}
 
 	void Begin()

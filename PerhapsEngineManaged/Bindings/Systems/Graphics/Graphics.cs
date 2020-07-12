@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace Perhaps
@@ -14,6 +16,9 @@ namespace Perhaps
 
         [DllImport("__Internal", EntryPoint = "Clear")]
         public static extern void Clear(ClearMask mask);
+
+        [DllImport("__Internal", EntryPoint = "NativeSetClearColor")]
+        public static extern void SetClearColor(Vector4 color);
 
     }
 }

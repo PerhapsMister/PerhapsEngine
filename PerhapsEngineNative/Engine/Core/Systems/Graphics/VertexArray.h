@@ -81,4 +81,25 @@ private:
 };
 VertexArray* VertexArray::bound = nullptr;
 
+PAPI VertexArray* CreateVertexArray()
+{
+	VertexArray* va = new VertexArray();
+	return va;
+}
+
+PAPI void DeleteVertexArray(VertexArray* va)
+{
+	delete(&va);
+}
+
+PAPI void VA_SetPositions(VertexArray* va, float* positions, int count)
+{
+	va->positions = std::vector<float>(positions, positions + count);
+}
+
+PAPI std::vector<float> VA_GetPositions(VertexArray* va)
+{
+	return va->positions;
+}
+
 #endif 

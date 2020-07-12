@@ -2,6 +2,9 @@
 #define PERHAPS_MANAGED_BINDING
 #include "../../PerhapsPch.h"
 
+const char* AssembliesFolder = "MonoRuntime/Managed";
+const char* EtcFolder = "MonoRuntime/etc";
+
 class GameLoop
 {
 public:

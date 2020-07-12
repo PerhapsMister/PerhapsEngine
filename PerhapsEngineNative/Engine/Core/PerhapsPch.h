@@ -9,7 +9,6 @@
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/debug-helpers.h"
 
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -24,6 +23,6 @@
 #define conlog(x) std::cout << x << "\n";
 typedef glm::vec4 Color;
 
-#define PAPI __declspec(dllexport)
+#define PAPI extern "C" __declspec(dllexport)
 
 #endif

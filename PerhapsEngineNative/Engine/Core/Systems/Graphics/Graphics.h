@@ -62,11 +62,9 @@ PAPI void Clear(Graphics::ClearMask mask)
 	Graphics::Clear(mask);
 }
 
-PAPI void DoSomething()
+PAPI void NativeSetClearColor(Color color)
 {
-	
+	Graphics::SetClearColor(color);
 }
-
-
 
 #endif

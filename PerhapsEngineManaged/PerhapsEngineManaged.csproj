@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>PerhapsEngineManaged</AssemblyName>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /E /Y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)PerhapsEngineNative\Debug-Bin\&quot;" />
+  </Target>
+
+</Project>

@@ -8,23 +8,17 @@ class Window
 {
 public:
 
-	static void Initialize(int startWidth, int startHeight, const char* title)
+	static Window* GetWindow(int startWidth, int startHeight, const char* title)
 	{
-		if (singleton == nullptr)
-		{
-			Window* window = new Window(startWidth, startHeight, title);
-			singleton = window;
-		}
-	}
+		Window* window = new Window(startWidth, startHeight, title);
+		activeWindows.insert(std::make_pair(window->glfwWindow, window));
 
-	static Window* GetWindow()
-	{
-		return singleton;
+		return window;
 	}
 
 	bool WindowCloseRequested()
 	{
-		return glfwWindowShouldClose(mWindow);
+		return glfwWindowShouldClose(glfwWindow);
 	}
 
 	void PollEvents()
@@ -34,7 +28,7 @@ public:
 
 	void SwapBuffers()
 	{
-		glfwSwapBuffers(mWindow);
+		glfwSwapBuffers(glfwWindow);
 	}
 
 	glm::vec2 GetDimensions()
@@ -43,52 +37,75 @@ public:
 	}
 
 	private:
+	static std::map<GLFWwindow*, Window*> activeWindows;
 	int mWidth, mHeight;
-	static Window* singleton;
-	GLFWwindow* mWindow = nullptr;
+	GLFWwindow* glfwWindow = nullptr;
 
 	const int GLMajor = 4, GLMinor = 3;
+	static bool glfwInitialized;
 
-	Window(int width, int height, const char* title)
+	Window(int width, int height, const char* title) : mWidth(width), mHeight(height)
+	{
+		if (!glfwInitialized)
+		{
+			InitializeGlfw();
+		}
+		glfwWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
+		glfwMakeContextCurrent(glfwWindow);
+
+		if (!glfwInitialized)
+		{
+			if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+			{
+				conlog("Failed to initialize glad!");
+			}
+			glfwInitialized = true;
+
+			std::stringstream ss;
+			ss << "GPU: " << glGetString(GL_RENDERER) << " by " << glGetString(GL_VENDOR) << "\n";
+			ss << "OpenGL Version: " << glGetString(GL_VERSION);
+			conlog(ss.str());
+		}
+
+		glfwSetFramebufferSizeCallback(glfwWindow, OnResize);
+	}
+
+	~Window()
+	{
+		activeWindows.erase(glfwWindow);
+		glfwDestroyWindow(glfwWindow);
+	}
+
+	void InitializeGlfw()
 	{
 		if (!glfwInit())
 		{
 			conlog("Failed to initialize GLFW");
 			return;
 		}
-		mWidth = width;
-		mHeight = height;
 
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GLMajor);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLMinor);
 		glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		mWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
-		glfwMakeContextCurrent(mWindow);
-
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-		{
-			conlog("Failed to initialize glad!");
-		}
-
-		std::stringstream ss;
-		ss << "GPU: " << glGetString(GL_RENDERER) << " by " << glGetString(GL_VENDOR) << "\n";
-		ss << "OpenGL Version: " << glGetString(GL_VERSION);
-		conlog(ss.str());
-
-		glfwSetFramebufferSizeCallback(mWindow, OnResize);
 	}
 
-	static void OnResize(GLFWwindow* window, int width, int height)
+	static void OnResize(GLFWwindow* glfwWindow, int width, int height)
 	{
-		singleton->mWidth = width;
-		singleton->mHeight = height;
-
+		Window* window = activeWindows[glfwWindow];
+		
+		window->mWidth = width;
+		window->mHeight = height;
+		
 		ResizeEvent e;
-		e.newSize = singleton->GetDimensions();
+		e.newSize = window->GetDimensions();
+		e.window = window;
+
 		EventDispatcher::DispatchEvent(e);
 	}
 };
-Window* Window::singleton = nullptr;
+std::map<GLFWwindow*, Window*> Window::activeWindows;
+bool Window::glfwInitialized = false;
+
 
 #endif

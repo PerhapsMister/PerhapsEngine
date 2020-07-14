@@ -36,7 +36,7 @@ public:
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(float), &positions[0], GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 		glEnableVertexAttribArray(0);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
@@ -52,15 +52,17 @@ public:
 		}
 	}
 
-	void Bind()
+	bool Bind()
 	{
 		if (vao != -1)
 		{
 			glBindVertexArray(vao);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+			bound = this;
+			return true;
 		}
 
-		bound = this;
+		return false;
 	}
 
 	static void Unbind()
@@ -81,15 +83,15 @@ private:
 };
 VertexArray* VertexArray::bound = nullptr;
 
-PAPI VertexArray* CreateVertexArray()
+PAPI VertexArray* VA_Create()
 {
 	VertexArray* va = new VertexArray();
 	return va;
 }
 
-PAPI void DeleteVertexArray(VertexArray* va)
+PAPI void VA_Delete(VertexArray* va)
 {
-	delete(&va);
+	delete(va);
 }
 
 PAPI void VA_SetPositions(VertexArray* va, float* positions, int count)
@@ -97,9 +99,36 @@ PAPI void VA_SetPositions(VertexArray* va, float* positions, int count)
 	va->positions = std::vector<float>(positions, positions + count);
 }
 
-PAPI std::vector<float> VA_GetPositions(VertexArray* va)
+PAPI void VA_GetPositions(VertexArray* va, float** positions, int* count)
 {
-	return va->positions;
+	*positions = &va->positions[0];
+	*count = va->positions.size();
+}
+
+PAPI void VA_Upload(VertexArray* va)
+{
+	va->UploadData();
+}
+
+PAPI bool VA_Bind(VertexArray* va)
+{
+	return va->Bind();
+}
+
+PAPI void VA_Unbind()
+{
+	VertexArray::Unbind();
+}
+
+PAPI void VA_GetIndices(VertexArray* va, unsigned int** indices, int* count)
+{
+	*indices = &va->indices[0];
+	*count = va->indices.size();
+}
+
+PAPI void VA_SetIndices(VertexArray* va, unsigned int* indices, int count)
+{
+	va->indices = std::vector<unsigned int>(indices, indices + count);
 }
 
 #endif 

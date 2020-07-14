@@ -28,9 +28,14 @@ public:
 
 	static void Draw(VertexArray* va)
 	{
-		va->Bind();
-
-		glDrawElements(GL_TRIANGLES, va->indices.size(), GL_UNSIGNED_INT, 0);
+		if (va->Bind())
+		{
+			glDrawElements(GL_TRIANGLES, va->indices.size(), GL_UNSIGNED_INT, 0);
+		}
+		else
+		{
+			conlog("Failed to bind vertex array");
+		}
 	}
 
 	void OnResize(const Event& event)
@@ -57,14 +62,19 @@ private:
 Graphics Graphics::initializer;
 
 
-PAPI void Clear(Graphics::ClearMask mask)
+PAPI void Graphics_Clear(Graphics::ClearMask mask)
 {
 	Graphics::Clear(mask);
 }
 
-PAPI void NativeSetClearColor(Color color)
+PAPI void Graphics_SetClearColor(Color color)
 {
 	Graphics::SetClearColor(color);
+}
+
+PAPI void Graphics_Draw(VertexArray* va)
+{
+	Graphics::Draw(va);
 }
 
 #endif

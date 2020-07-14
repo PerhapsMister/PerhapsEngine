@@ -7,8 +7,12 @@
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /E /Y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)PerhapsEngineNative\Debug-Bin\&quot;" />
-  </Target>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /E /Y &quot;$(TargetPath)&quot; &quot;$(ProjectDir)PerhapsEngineNative\Debug-Bin\&quot;" />
+  </Target>
+  
 </Project>

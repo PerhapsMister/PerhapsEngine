@@ -182,7 +182,9 @@
     <ClInclude Include="Engine\Core\Systems\EventSystem\EngineEvents.h" />
     <ClInclude Include="Engine\Core\Systems\GameLoop\GameLoop.h" />
     <ClInclude Include="Engine\Core\Systems\Graphics\Graphics.h" />
+    <ClInclude Include="Engine\Core\Systems\Graphics\Shader.h" />
     <ClInclude Include="Engine\Core\Systems\Graphics\VertexArray.h" />
+    <ClInclude Include="Engine\Core\Systems\MonoBindings\MonoHaps.h" />
     <ClInclude Include="Engine\Vendor\Mono\include\mono-2.0\mono\jit\jit.h" />
     <ClInclude Include="Engine\Vendor\Mono\include\mono-2.0\mono\metadata\appdomain.h" />
     <ClInclude Include="Engine\Vendor\Mono\include\mono-2.0\mono\metadata\assembly.h" />
@@ -507,7 +509,7 @@
     <ClInclude Include="Engine\Vendor\GLM\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\Core\Entry.cpp" />
+    <ClCompile Include="Engine\Core\main.cpp" />
     <ClCompile Include="Engine\Core\PerhapsPch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

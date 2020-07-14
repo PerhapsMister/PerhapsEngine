@@ -1,51 +1,74 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace Perhaps
+namespace Perhaps.Engine
 {
     public class PerhapsEngine
     {
         VertexArray va;
-
         public void OnInitialize()
         {
-            Console.WriteLine("C# dll initialized. my name is cs 461");
+            try
+            {
+                Init();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+        }
+        
+        void Init()
+        {
+            Console.WriteLine($"C# dll initialized. Domain: {AppDomain.CurrentDomain.FriendlyName} Version: {typeof(string).Assembly.ImageRuntimeVersion}");
             va = VertexArray.CreateArray();
 
-            Vector2[] positions = new Vector2[]
+            string[] args = Environment.GetCommandLineArgs();
+            Console.WriteLine("Arguments: " + args.Length);
+
+            for (int i = 0; i < args.Length; i++)
             {
-                new Vector2(-0.5f, -0.5f),
-                new Vector2(0.5f, -0.5f),
-                new Vector2(0.5f, 0.5f),
-                new Vector2(-0.5f, 0.5f)
+                Console.WriteLine(args[i]);
+            }
+
+            Vector3[] positions = new Vector3[]
+            {
+                new Vector3(-0.5f, -0.5f, 0f),//bottom left
+                new Vector3(0.5f, -0.5f, 0f),//bottom right
+                new Vector3(0.5f, 0.5f, 0f),//top right
+                new Vector3(-0.5f, 0.5f, 0f)//top left
             };
 
             va.positions = positions;
-            for (int i = 0; i < 4; i++)
+            va.Indices = new uint[]
             {
-                Vector2[] poses = va.positions;
-            }
+                0,1,3,
+                1,2,3
+            };
+            va.UploadData();
+            va.Bind();
 
-            /*
-            Vector2[] poss = va.positions;
-            Console.WriteLine(poss.Length);
+            Vector3[] poses = va.positions;
+            Console.WriteLine(poses.Length);
+            
+            bool areEqual = Enumerable.SequenceEqual(positions, poses);
+            Console.WriteLine("Equal: " + areEqual);
+            Graphics.SetClearColor(new Vector4(0.5f, 0.5f, 1f, 1f));
 
-            for (int i = 0; i < 4; i++)
-            {
-                Vector2[] poses = va.positions;
-            }
-
-            for (int i = 0; i < poss.Length; i++)
-            {
-                Console.WriteLine(poss[i]);
-            }
-            */
+            sw = Stopwatch.StartNew();
         }
 
+        Stopwatch sw;
         public void OnUpdate()
         {
+            Time.OnFrameStart();
             Graphics.Clear(Graphics.ClearMask.COLOR);
+            Graphics.DrawVertexArray(va);
         }
     }
 }

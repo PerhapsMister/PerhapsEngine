@@ -15,59 +15,43 @@ class PerhapsEngine
 public:
 	static void Initialize()
 	{
-		PerhapsEngine engine;
-		engine.Begin();
+		if (instance == nullptr)
+		{
+			PerhapsEngine engine;
+			instance = &engine;
+			engine.Begin();
+		}
+	}
+
+	static PerhapsEngine* Singleton()
+	{
+		return instance;
+	}
+
+	Window* GetWindow()
+	{
+		return mainWindow;
 	}
 
 private:
-	static PerhapsEngine instance;
-	friend class Window;
-
-	PerhapsEngine()
-	{
-		
-	}
+	static PerhapsEngine* instance;
+	Window* mainWindow;
 
 	void Begin()
 	{
-		Window::Initialize(width, height, title);
-		Window* window = Window::GetWindow();
-		Graphics::SetClearColor(Color(0.4, 0.4, 1, 1));
-
-		std::vector<float> positions =
-		{
-			-0.5f, -0.5f,//bottom left
-			0.5f, -0.5f,//bottom right
-			0.5f, 0.5f,//top right
-			-0.5f, 0.5f//top left
-		};
-
-		std::vector<unsigned int> indices =
-		{
-			0,1,2,
-			2,3,0
-		};
-
-		VertexArray va;
-		va.positions = positions;
-		va.indices = indices;
-		va.UploadData();
-		va.Bind();
-
+		mainWindow = Window::GetWindow(width, height, title);
 		GameLoop::Init();
 
-		while (!window->WindowCloseRequested())
+		while (!mainWindow->WindowCloseRequested())
 		{
-			window->PollEvents();
-
-			Graphics::Clear(Graphics::ClearMask::COLOR_DEPTH_STENCIL);
-			Graphics::Draw(&va);
+			mainWindow->PollEvents();
 			GameLoop::OnUpdate();
-
-			window->SwapBuffers();
+			mainWindow->SwapBuffers();
 		}
+
+		GameLoop::Cleanup();
 	}
 };
-
+PerhapsEngine* PerhapsEngine::instance = nullptr;
 
 #endif

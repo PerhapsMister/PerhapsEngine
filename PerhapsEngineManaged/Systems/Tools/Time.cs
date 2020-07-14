@@ -37,9 +37,6 @@ namespace Perhaps.Engine
                 sum /= deltas.Count;
                 AverageDelta = sum;
                 deltas.Clear();
-
-                Console.WriteLine(1f/ AverageDelta);
-
                 timer = 0f;
             }
 

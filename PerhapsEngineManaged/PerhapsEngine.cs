@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace Perhaps.Engine
 {
@@ -28,14 +29,6 @@ namespace Perhaps.Engine
             Console.WriteLine($"C# dll initialized. Domain: {AppDomain.CurrentDomain.FriendlyName} Version: {typeof(string).Assembly.ImageRuntimeVersion}");
             va = VertexArray.CreateArray();
 
-            string[] args = Environment.GetCommandLineArgs();
-            Console.WriteLine("Arguments: " + args.Length);
-
-            for (int i = 0; i < args.Length; i++)
-            {
-                Console.WriteLine(args[i]);
-            }
-
             Vector3[] positions = new Vector3[]
             {
                 new Vector3(-0.5f, -0.5f, 0f),//bottom left
@@ -53,17 +46,22 @@ namespace Perhaps.Engine
             va.UploadData();
             va.Bind();
 
-            Vector3[] poses = va.positions;
-            Console.WriteLine(poses.Length);
-            
-            bool areEqual = Enumerable.SequenceEqual(positions, poses);
-            Console.WriteLine("Equal: " + areEqual);
             Graphics.SetClearColor(new Vector4(0.5f, 0.5f, 1f, 1f));
 
-            sw = Stopwatch.StartNew();
+            string pathToShadersFolder= Environment.CurrentDirectory;
+            pathToShadersFolder = Path.GetFullPath(Path.Combine(pathToShadersFolder, @"..\"));
+            pathToShadersFolder = pathToShadersFolder + "\\PerhapsEngineManaged\\Shaders\\";
+            Console.WriteLine(pathToShadersFolder);
+            
+            string vertSrc = File.ReadAllText(pathToShadersFolder + "Test.vert");
+            string fragSrc = File.ReadAllText(pathToShadersFolder + "Test.frag");
+
+            Shader h = Shader.CompileShader(vertSrc, fragSrc);
+            Console.WriteLine("Shader compiled: " + (h != null));
+            h.Bind();
+            
         }
 
-        Stopwatch sw;
         public void OnUpdate()
         {
             Time.OnFrameStart();

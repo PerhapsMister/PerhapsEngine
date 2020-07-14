@@ -45,7 +45,6 @@ namespace Perhaps
                     pos[i + 2] = value[i].Z;
                 }
 
-                Console.WriteLine("Write: " + mNativeObject);
                 VA_SetPositions(mNativeObject, value, pos.Length);
             }
         }

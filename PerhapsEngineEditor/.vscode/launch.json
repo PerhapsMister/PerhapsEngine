@@ -1,0 +1,28 @@
+{
+    "version": "2.0.0",
+    "configurations": [
+        {
+            "name":"Debug",
+            "request": "attach",
+            "type": "mono",
+            "address": "localhost",
+            "port": 24040,
+        },
+        {
+            "name": "Build & Copy",
+            "preLaunchTask": "build",
+            "request": "attach",
+            "type": "mono",
+            "address": "localhost",
+            "port": 24040, 
+        },
+        {
+            "name": "Build, Copy & Debug",
+            "preLaunchTask": "build&copy",
+            "request": "attach",
+            "type": "mono",
+            "address": "localhost",
+            "port": 24040,      
+        },
+    ]
+}

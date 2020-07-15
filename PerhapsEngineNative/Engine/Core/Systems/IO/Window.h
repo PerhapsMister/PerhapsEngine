@@ -4,108 +4,113 @@
 #include "../EventSystem/EventSystem.h"
 #include "../EventSystem/EngineEvents.h"
 
-class Window
+namespace Perhaps
 {
-public:
 
-	static Window* GetWindow(int startWidth, int startHeight, const char* title)
+
+
+	class Window
 	{
-		Window* window = new Window(startWidth, startHeight, title);
-		activeWindows.insert(std::make_pair(window->glfwWindow, window));
+	public:
 
-		return window;
-	}
+		static Window* CreateWindow(int startWidth, int startHeight, const char* title)
+		{
+			Window* window = new Window(startWidth, startHeight, title);
+			activeWindows.insert(std::make_pair(window->glfwWindow, window));
 
-	bool WindowCloseRequested()
-	{
-		return glfwWindowShouldClose(glfwWindow);
-	}
+			return window;
+		}
 
-	void PollEvents()
-	{
-		glfwPollEvents();
-	}
+		bool WindowCloseRequested()
+		{
+			return glfwWindowShouldClose(glfwWindow);
+		}
 
-	void SwapBuffers()
-	{
-		glfwSwapBuffers(glfwWindow);
-	}
+		void PollEvents()
+		{
+			glfwPollEvents();
+		}
 
-	glm::vec2 GetDimensions()
-	{
-		return glm::vec2(mWidth, mHeight);
-	}
+		void SwapBuffers()
+		{
+			glfwSwapBuffers(glfwWindow);
+		}
+
+		glm::vec2 GetDimensions()
+		{
+			return glm::vec2(mWidth, mHeight);
+		}
 
 	private:
-	static std::map<GLFWwindow*, Window*> activeWindows;
-	int mWidth, mHeight;
-	GLFWwindow* glfwWindow = nullptr;
+		static std::map<GLFWwindow*, Window*> activeWindows;
+		int mWidth, mHeight;
+		GLFWwindow* glfwWindow = nullptr;
 
-	const int GLMajor = 4, GLMinor = 3;
-	static bool glfwInitialized;
+		const int GLMajor = 4, GLMinor = 3;
+		static bool glfwInitialized;
 
-	Window(int width, int height, const char* title) : mWidth(width), mHeight(height)
-	{
-		if (!glfwInitialized)
+		Window(int width, int height, const char* title) : mWidth(width), mHeight(height)
 		{
-			InitializeGlfw();
-		}
-		glfwWindow = glfwCreateWindow(width, height, title, nullptr, nullptr);
-		glfwMakeContextCurrent(glfwWindow);
-
-		if (!glfwInitialized)
-		{
-			if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+			if (!glfwInitialized)
 			{
-				conlog("Failed to initialize glad!");
+				InitializeGlfw();
 			}
-			glfwInitialized = true;
+			glfwWindow = glfwCreateWindow(width, height, title, NULL, nullptr);
+			glfwMakeContextCurrent(glfwWindow);
 
-			std::stringstream ss;
-			ss << "GPU: " << glGetString(GL_RENDERER) << " by " << glGetString(GL_VENDOR) << "\n";
-			ss << "OpenGL Version: " << glGetString(GL_VERSION);
-			conlog(ss.str());
+
+			if (!glfwInitialized)
+			{
+				if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+				{
+					conlog("Failed to initialize glad!");
+				}
+				glfwInitialized = true;
+
+				std::stringstream ss;
+				ss << "GPU: " << glGetString(GL_RENDERER) << " by " << glGetString(GL_VENDOR) << "\n";
+				ss << "OpenGL Version: " << glGetString(GL_VERSION);
+				conlog(ss.str());
+			}
+
+			glfwSetFramebufferSizeCallback(glfwWindow, OnResize);
 		}
 
-		glfwSetFramebufferSizeCallback(glfwWindow, OnResize);
-	}
-
-	~Window()
-	{
-		activeWindows.erase(glfwWindow);
-		glfwDestroyWindow(glfwWindow);
-	}
-
-	void InitializeGlfw()
-	{
-		if (!glfwInit())
+		~Window()
 		{
-			conlog("Failed to initialize GLFW");
-			return;
+			activeWindows.erase(glfwWindow);
+			glfwDestroyWindow(glfwWindow);
 		}
 
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GLMajor);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLMinor);
-		glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		void InitializeGlfw()
+		{
+			if (!glfwInit())
+			{
+				conlog("Failed to initialize GLFW");
+				return;
+			}
 
-	}
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, GLMajor);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLMinor);
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		}
 
-	static void OnResize(GLFWwindow* glfwWindow, int width, int height)
-	{
-		Window* window = activeWindows[glfwWindow];
-		
-		window->mWidth = width;
-		window->mHeight = height;
-		
-		ResizeEvent e;
-		e.newSize = window->GetDimensions();
-		e.window = window;
+		static void OnResize(GLFWwindow* glfwWindow, int width, int height)
+		{
+			Window* window = activeWindows[glfwWindow];
 
-		EventDispatcher::DispatchEvent(e);
-	}
-};
-std::map<GLFWwindow*, Window*> Window::activeWindows;
-bool Window::glfwInitialized = false;
+			window->mWidth = width;
+			window->mHeight = height;
 
+			ResizeEvent e;
+			e.newSize = window->GetDimensions();
+			e.window = window;
+
+			EventDispatcher::DispatchEvent(e);
+		}
+	};
+	std::map<GLFWwindow*, Window*> Window::activeWindows;
+	bool Window::glfwInitialized = false;
+}
 
 #endif

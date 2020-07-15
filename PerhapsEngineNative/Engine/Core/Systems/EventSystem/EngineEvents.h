@@ -2,20 +2,23 @@
 #define PERHAPS_RESIZE_EVENT
 #include "EventSystem.h"
 
-class Window;
-
-class ResizeEvent : public Event
+namespace Perhaps
 {
-public:
-	Window* window;
-	glm::vec2 newSize;
 
-	static constexpr const char* descriptor = "Resize";
+	class Window;
 
-	virtual DescriptorType GetType() const
+	class ResizeEvent : public Event
 	{
-		return descriptor;
-	}
-};
+	public:
+		Window* window = nullptr;
+		glm::vec2 newSize;
 
+		static constexpr const char* descriptor = "Resize";
+
+		virtual DescriptorType GetType() const
+		{
+			return descriptor;
+		}
+	};
+}
 #endif

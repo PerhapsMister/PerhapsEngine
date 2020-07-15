@@ -1,0 +1,56 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Dev\\Dev\\PerhapsEngine\\native\\PerhapsEngine\\PerhapsEngineEditor\\PerhapsEngineEditor.csproj": {}
+  },
+  "projects": {
+    "D:\\Dev\\Dev\\PerhapsEngine\\native\\PerhapsEngine\\PerhapsEngineEditor\\PerhapsEngineEditor.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Dev\\Dev\\PerhapsEngine\\native\\PerhapsEngine\\PerhapsEngineEditor\\PerhapsEngineEditor.csproj",
+        "projectName": "PerhapsEngineEditor",
+        "projectPath": "D:\\Dev\\Dev\\PerhapsEngine\\native\\PerhapsEngine\\PerhapsEngineEditor\\PerhapsEngineEditor.csproj",
+        "packagesPath": "C:\\Users\\hppp1\\.nuget\\packages\\",
+        "outputPath": "D:\\Dev\\Dev\\PerhapsEngine\\native\\PerhapsEngine\\PerhapsEngineEditor\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\hppp1\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net461"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net461": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net461": {
+          "dependencies": {
+            "AssimpNet": {
+              "target": "Package",
+              "version": "[5.0.0-beta1, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

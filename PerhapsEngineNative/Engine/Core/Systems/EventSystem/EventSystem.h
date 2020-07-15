@@ -2,111 +2,115 @@
 #define PERHAPS_EVENT_SYSTEM
 #include "../../PerhapsPch.h"
 
-class Event
+namespace Perhaps
 {
-public:
-	typedef const char* DescriptorType;
 
-	virtual DescriptorType GetType() const = 0;
-};
 
-class EventDispatcher
-{
-public:
-	typedef std::function<void(const Event&)> SlotType;
-
-	class StoredFunction
+	class Event
 	{
 	public:
+		typedef const char* DescriptorType;
 
-		int id = -1;
-		Event::DescriptorType descriptor;
-		EventDispatcher::SlotType slot;
+		virtual DescriptorType GetType() const = 0;
 	};
 
-	/// <summary>
-	/// Subscribe to a certain type of event.
-	/// </summary>
-	/// <param name="descriptor"></param>
-	/// <param name="function"></param>
-	/// <returns>event listen ID</returns>
-	static int Subscribe(Event::DescriptorType descriptor, SlotType&& function)
+	class EventDispatcher
 	{
-		int id = ++idReel;
-		StoredFunction* f = new StoredFunction();
-		f->descriptor = descriptor;
-		f->slot = function;
-		f->id = id;
+	public:
+		typedef std::function<void(const Event&)> SlotType;
 
-		observers[descriptor].push_back(f);
-		idToFun.insert(std::make_pair(id, f));
-
-		return id;
-	}
-
-
-	static void UnSubscribe(int id)
-	{	
-		if (idToFun.find(id) == idToFun.end())
+		class StoredFunction
 		{
-			return;
+		public:
+
+			int id = -1;
+			Event::DescriptorType descriptor = nullptr;
+			EventDispatcher::SlotType slot;
+		};
+
+		/// <summary>
+		/// Subscribe to a certain type of event.
+		/// </summary>
+		/// <param name="descriptor"></param>
+		/// <param name="function"></param>
+		/// <returns>event listen ID</returns>
+		static int Subscribe(Event::DescriptorType descriptor, SlotType&& function)
+		{
+			int id = ++idReel;
+			StoredFunction* f = new StoredFunction();
+			f->descriptor = descriptor;
+			f->slot = function;
+			f->id = id;
+
+			observers[descriptor].push_back(f);
+			idToFun.insert(std::make_pair(id, f));
+
+			return id;
 		}
 
-		StoredFunction* e = idToFun.at(id);
-		auto& vector = observers[e->descriptor];
-		SlotType* slot = &e->slot;
 
-		for (size_t i = 0; i < vector.size(); i++)
+		static void UnSubscribe(int id)
 		{
-			SlotType* currnet = &vector[i]->slot;
-
-			if (currnet == slot)
+			if (idToFun.find(id) == idToFun.end())
 			{
-				vector.erase(vector.begin() + i);
-				idToFun.erase(id);
-				delete(e);
 				return;
 			}
-		}
-	}
 
+			StoredFunction* e = idToFun.at(id);
+			auto& vector = observers[e->descriptor];
+			SlotType* slot = &e->slot;
 
-	static void DispatchEvent(const Event& event)
-	{
-		Event::DescriptorType type = event.GetType();
-
-		if (observers.find(type) == observers.end())
-		{
-			return;
-		}
-
-		auto&& observerList = observers.at(type);
-
-		for (size_t i = 0; i < observerList.size(); i++)
-		{
-			auto e = observerList[i]->slot;
-			if (&e == nullptr)
+			for (size_t i = 0; i < vector.size(); i++)
 			{
-				observerList.erase(observerList.begin() + i);
-				i--;
-			}
-			else
-			{
-				std::invoke(observerList[i]->slot, event);
-				//observerList[i].slot
-				//observerList[i].slot(event);
+				SlotType* currnet = &vector[i]->slot;
+
+				if (currnet == slot)
+				{
+					vector.erase(vector.begin() + i);
+					idToFun.erase(id);
+					delete(e);
+					return;
+				}
 			}
 		}
-	}
-
-private:
-	static std::map<Event::DescriptorType, std::vector<StoredFunction*>> observers;
-	static std::map<int, StoredFunction*> idToFun;
-	static int idReel;
-};
-std::map<Event::DescriptorType, std::vector<EventDispatcher::StoredFunction*>> EventDispatcher::observers;
-std::map<int, EventDispatcher::StoredFunction*> EventDispatcher::idToFun;
-int EventDispatcher::idReel = 0;
 
 
+		static void DispatchEvent(const Event& event)
+		{
+			Event::DescriptorType type = event.GetType();
+
+			if (observers.find(type) == observers.end())
+			{
+				return;
+			}
+
+			auto&& observerList = observers.at(type);
+
+			for (size_t i = 0; i < observerList.size(); i++)
+			{
+				auto e = observerList[i]->slot;
+				if (&e == nullptr)
+				{
+					observerList.erase(observerList.begin() + i);
+					i--;
+				}
+				else
+				{
+					std::invoke(observerList[i]->slot, event);
+					//observerList[i].slot
+					//observerList[i].slot(event);
+				}
+			}
+		}
+
+	private:
+		static std::map<Event::DescriptorType, std::vector<StoredFunction*>> observers;
+		static std::map<int, StoredFunction*> idToFun;
+		static int idReel;
+	};
+	std::map<Event::DescriptorType, std::vector<EventDispatcher::StoredFunction*>> EventDispatcher::observers;
+	std::map<int, EventDispatcher::StoredFunction*> EventDispatcher::idToFun;
+	int EventDispatcher::idReel = 0;
+
+}
 #endif

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "PerhapsEngineManaged": {
+      "commandName": "Executable",
+      "executablePath": "D:\\Dev\\Dev\\PerhapsEngine\\native\\PerhapsEngineNative\\PerhapsEngineNative\\Debug-Bin\\PerhapsEngine.exe",
+      "remoteDebugEnabled": false,
+      "remoteDebugMachine": "",
+      "authenticationMode": "None",
+      "nativeDebugging": false
+    }
+  }
+}

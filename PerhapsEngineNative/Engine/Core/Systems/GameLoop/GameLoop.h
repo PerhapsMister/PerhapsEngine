@@ -3,26 +3,29 @@
 #include "../../PerhapsPch.h"
 #include "../MonoBindings/MonoHaps.h"
 
-class GameLoop
+namespace Perhaps
 {
-public:
-
-	static void Init()
+	class GameLoop
 	{
-		MonoHaps::InitializeMono();
-	}
+	public:
 
-	static void OnUpdate()
-	{
-		MonoHaps::UpdateManaged();
-	}
+		static void Init()
+		{
+			MonoHaps::InitializeMono();
+		}
 
-	static void Cleanup()
-	{
+		static void OnUpdate()
+		{
+			MonoHaps::UpdateManaged();
+		}
 
-	}
-private:
+		static void Cleanup()
+		{
 
-};
+		}
+	private:
+
+	};
+}
 
 #endif

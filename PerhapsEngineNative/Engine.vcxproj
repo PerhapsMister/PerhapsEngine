@@ -73,23 +73,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)$(Configuration)-Bin\</OutDir>
-    <IntDir>$(ProjectDir)$(Configuration)-Bin-Int\</IntDir>
+    <OutDir>$(ProjectDir)Build-$(Configuration)-Bin\</OutDir>
+    <IntDir>$(ProjectDir)Build-$(Configuration)-Bin-Int\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)$(Configuration)-Bin\</OutDir>
-    <IntDir>$(ProjectDir)$(Configuration)-Bin-Int\</IntDir>
+    <OutDir>$(ProjectDir)Build-$(Configuration)-Bin\</OutDir>
+    <IntDir>$(ProjectDir)Build-$(Configuration)-Bin-Int\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)$(Configuration)-Bin\</OutDir>
-    <IntDir>$(ProjectDir)$(Configuration)-Bin-Int\</IntDir>
+    <OutDir>$(ProjectDir)Build-$(Configuration)-Bin\</OutDir>
+    <IntDir>$(ProjectDir)Build-$(Configuration)-Bin-Int\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)$(Configuration)-Bin\</OutDir>
-    <IntDir>$(ProjectDir)$(Configuration)-Bin-Int\</IntDir>
+    <OutDir>$(ProjectDir)Build-$(Configuration)-Bin\</OutDir>
+    <IntDir>$(ProjectDir)Build-$(Configuration)-Bin-Int\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,7 +97,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;$(ProjectDir)Engine\Vendor\entt\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -118,7 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;$(ProjectDir)Engine\Vendor\entt\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -139,7 +139,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;$(ProjectDir)Engine\Vendor\entt\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -160,7 +160,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;$(ProjectDir)Engine\Vendor\entt\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -183,6 +183,8 @@
     <ClInclude Include="Engine\Core\Systems\GameLoop\GameLoop.h" />
     <ClInclude Include="Engine\Core\Systems\Graphics\Graphics.h" />
     <ClInclude Include="Engine\Core\Systems\Graphics\Shader.h" />
+    <ClInclude Include="Engine\Core\Systems\Graphics\RenderTexture.h" />
+    <ClInclude Include="Engine\Core\Systems\Graphics\Texture2D.h" />
     <ClInclude Include="Engine\Core\Systems\Graphics\VertexArray.h" />
     <ClInclude Include="Engine\Core\Systems\MonoBindings\MonoHaps.h" />
     <ClInclude Include="Engine\Vendor\Mono\include\mono-2.0\mono\jit\jit.h" />

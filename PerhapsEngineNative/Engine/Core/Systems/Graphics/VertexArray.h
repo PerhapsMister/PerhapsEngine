@@ -3,9 +3,18 @@
 #include "../../PerhapsPch.h"
 namespace Perhaps
 {
+	struct Vertex
+	{
+	public:
+		glm::vec3 position;
+		glm::vec2 uv;
+		glm::vec3 normal;
+	};
+
 	class VertexArray
 	{
 	public:
+
 		VertexArray()
 		{
 
@@ -23,12 +32,10 @@ namespace Perhaps
 			{
 				glGenVertexArrays(1, &vao);
 			}
-
 			if (vbo == 0)
 			{
 				glGenBuffers(1, &vbo);
 			}
-
 			if (ebo == 0)
 			{
 				glGenBuffers(1, &ebo);
@@ -36,21 +43,22 @@ namespace Perhaps
 
 			glBindVertexArray(vao);
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(float), &positions[0], GL_STATIC_DRAW);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-			glEnableVertexAttribArray(0);
+			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+
+			const int stride = sizeof(Vertex);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+			glEnableVertexAttribArray(0);//position
+
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, stride, (void*)(sizeof(float) * 3));
+			glEnableVertexAttribArray(1);//uv
+
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, stride, (void*)(sizeof(float) * 5));
+			glEnableVertexAttribArray(2);//normal
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(float), &indices[0], GL_STATIC_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), &indices[0], GL_STATIC_DRAW);
 
-			if (bound != this && bound != nullptr)
-			{
-				bound->Bind();
-			}
-			else if (bound == nullptr)
-			{
-				Unbind();
-			}
+			BindCheck();
 		}
 
 		bool Bind()
@@ -74,14 +82,24 @@ namespace Perhaps
 			bound = nullptr;
 		}
 
-		std::vector<float> positions;
-		std::vector<unsigned int> indices;
-		std::vector<float> uvs;
-		std::vector<float> normals;
+		std::vector<Vertex> vertices;
+		std::vector<int> indices;
+
 	private:
 		static VertexArray* bound;
-
 		unsigned int vao = 0, vbo = 0, ebo = 0;
+
+		void BindCheck()
+		{
+			if (bound != nullptr)
+			{
+				bound->Bind();
+			}
+			else
+			{
+				Unbind();
+			}
+		}
 
 	};
 	VertexArray* VertexArray::bound = nullptr;
@@ -97,15 +115,26 @@ namespace Perhaps
 		delete(va);
 	}
 
-	PAPI void VA_SetPositions(VertexArray* va, float* positions, int count)
+	PAPI void VA_SetVertices(VertexArray* va, Vertex* vertices, int count)
 	{
-		va->positions = std::vector<float>(positions, positions + count);
+		va->vertices = std::vector<Vertex>(vertices, vertices + count);
 	}
 
-	PAPI void VA_GetPositions(VertexArray* va, float** positions, int* count)
+	PAPI void VA_GetVertices(VertexArray* va, Vertex** vertices, int* count)
 	{
-		*positions = &va->positions[0];
-		*count = va->positions.size();
+		*vertices = &va->vertices[0];
+		*count = va->vertices.size();
+	}
+
+	PAPI void VA_GetIndices(VertexArray* va, int** indices, int* count)
+	{
+		*indices = &va->indices[0];
+		*count = va->indices.size();
+	}
+
+	PAPI void VA_SetIndices(VertexArray* va, int* indices, int count)
+	{
+		va->indices = std::vector<int>(indices, indices + count);
 	}
 
 	PAPI void VA_Upload(VertexArray* va)
@@ -121,17 +150,6 @@ namespace Perhaps
 	PAPI void VA_Unbind()
 	{
 		VertexArray::Unbind();
-	}
-
-	PAPI void VA_GetIndices(VertexArray* va, unsigned int** indices, int* count)
-	{
-		*indices = &va->indices[0];
-		*count = va->indices.size();
-	}
-
-	PAPI void VA_SetIndices(VertexArray* va, unsigned int* indices, int count)
-	{
-		va->indices = std::vector<unsigned int>(indices, indices + count);
 	}
 }
 #endif 

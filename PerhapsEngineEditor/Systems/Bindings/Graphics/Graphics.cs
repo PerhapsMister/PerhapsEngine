@@ -13,6 +13,10 @@ namespace Perhaps.Engine
             COLOR_DEPTH = (int)COLOR | (int)DEPTH, COLOR_STENCIL = (int)COLOR | (int)STENCIL,
             COLOR_DEPTH_STENCIL = (int)COLOR | (int)DEPTH | (int)STENCIL
         };
+        public enum EnableParam
+		{
+			DEPTH_TEST = 0x0B71,
+		};
 
         public static void DrawVertexArray(VertexArray va)
         {
@@ -28,6 +32,11 @@ namespace Perhaps.Engine
         {
             Graphics_SetClearColor(color);
         }
+        
+        public static void Enable(EnableParam param, bool value)
+        {
+            Graphics_Enable((int)param,value);
+        }
 
         [DllImport("__Internal", EntryPoint = "Graphics_Clear")]
         static extern void Graphics_Clear(ClearMask mask);
@@ -37,6 +46,8 @@ namespace Perhaps.Engine
 
         [DllImport("__Internal", EntryPoint = "Graphics_Draw")]
         static extern void Graphics_Draw(IntPtr va);
+        [DllImport("__Internal", EntryPoint = "Graphics_Enable")]
+        static extern void Graphics_Enable(int param, bool value);
 
     }
 }

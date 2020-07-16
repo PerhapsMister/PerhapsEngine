@@ -19,6 +19,11 @@ namespace Perhaps
 			COLOR_DEPTH_STENCIL = (int)COLOR | (int)DEPTH | (int)STENCIL
 		};
 
+		enum class EnableParam
+		{
+			DEPTH_TEST = GL_DEPTH_TEST,
+		};
+
 		static void Clear(ClearMask mask)
 		{
 			glClear((int)mask);
@@ -45,6 +50,20 @@ namespace Perhaps
 		{
 			ResizeEvent& e = (ResizeEvent&)event;
 			glViewport(0, 0, e.newSize.x, e.newSize.y);
+		}
+
+		static void Enable(EnableParam param, bool value)
+		{
+			GLenum p = (GLenum)param;
+
+			if (value)
+			{
+				glEnable(p);
+			}
+			else
+			{
+				glDisable(p);
+			}
 		}
 
 	private:
@@ -78,6 +97,11 @@ namespace Perhaps
 	PAPI void Graphics_Draw(VertexArray* va)
 	{
 		Graphics::Draw(va);
+	}
+
+	PAPI void Graphics_Enable(Graphics::EnableParam param, bool value)
+	{
+		Graphics::Enable(param, value);
 	}
 }
 

@@ -10,7 +10,7 @@
         },
         {
             "name": "Build & Copy",
-            "preLaunchTask": "build",
+            "preLaunchTask": "build&copy",
             "request": "attach",
             "type": "mono",
             "address": "localhost",

@@ -8,7 +8,7 @@
         },
         {
             "label": "build&copy",
-            "command": "xcopy /Y /D /E ${workspaceFolder}\\bin\\Debug\\net461 D:\\Dev\\Dev\\PerhapsEngine\\native\\PerhapsEngine\\PerhapsEngineNative\\Build-Debug-Bin",
+            "command": "xcopy /Y /D /E ${workspaceFolder}\\bin\\Debug\\net461 D:\\Dev\\Dev\\PerhapsEngine\\PerhapsEngineNative\\Build-Debug-Bin",
             "type": "shell",
             "dependsOn": [
                 "build"

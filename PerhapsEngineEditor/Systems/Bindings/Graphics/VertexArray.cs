@@ -5,6 +5,18 @@ using System.Linq;
 
 namespace Perhaps.Engine
 {
+    [System.Serializable]
+    [StructLayout(LayoutKind.Explicit)]
+    public struct Vertex
+    {
+        [FieldOffset(0)]
+        public Vector3 position;
+        [FieldOffset(3 * 4)]
+		public Vector2 uv;
+        [FieldOffset(5 * 4)]
+		public Vector3 normal;
+    }
+
     public class VertexArray : IDisposable
     {
         IntPtr mNativeObject;
@@ -14,42 +26,27 @@ namespace Perhaps.Engine
             return mNativeObject;
         }
 
-        public Vector3[] positions
+
+        public Vertex[] vertices
         {
             get
             {
-                VA_GetPositions(mNativeObject, out IntPtr positions, out int count);
+                VA_GetVertices(mNativeObject, out IntPtr verticesLocation, out int count);
 
-                float[] floats = new float[count];
-                Marshal.Copy(positions, floats, 0, count);
-                
-                Vector3[] vectors = new Vector3[count/3];
-                for (int i = 0; i < floats.Length; i+=3)
-                {
-                    int index = i / 3;
-                    vectors[index].X = floats[i];
-                    vectors[index].Y = floats[i+1];
-                    vectors[index].Z = floats[i+2];
-                }
+                byte[] vertBytes = new byte[Marshal.SizeOf(typeof(Vertex)) * count];
+                Marshal.Copy(verticesLocation, vertBytes, 0, vertBytes.Length);
+                Span<Vertex> vertices = MemoryMarshal.Cast<byte, Vertex>(vertBytes.AsSpan());
 
-                return vectors;
+                Vertex[] verts = vertices.ToArray();
+                return verts;
             }
             set
             {
-                float[] pos = new float[value.Length * 3];
-
-                for (int i = 0; i < value.Length; i++)
-                {
-                    pos[i] = value[i].X;
-                    pos[i + 1] = value[i].Y;
-                    pos[i + 2] = value[i].Z;
-                }
-
-                VA_SetPositions(mNativeObject, value, pos.Length);
+                VA_SetVertices(mNativeObject, value, value.Length);
             }
         }
-
-        public uint[] Indices
+        
+        public int[] indices
         {
             get
             {
@@ -57,7 +54,7 @@ namespace Perhaps.Engine
                 int[] dest = new int[count];
                 Marshal.Copy(indices, dest, 0, count);
 
-                return dest.OfType<uint>().ToArray();
+                return dest;
             }
             set
             {
@@ -98,16 +95,16 @@ namespace Perhaps.Engine
         {
 
         }
-
         
         [DllImport("__Internal", EntryPoint = "VA_Create")]
         static extern IntPtr VA_Create();
         [DllImport("__Internal", EntryPoint = "VA_Delete")]
         static extern void VA_Delete(IntPtr va);
-        [DllImport("__Internal", EntryPoint = "VA_SetPositions")]
-        static extern void VA_SetPositions(IntPtr va, Vector3[] positions, int count);
-        [DllImport("__Internal", EntryPoint = "VA_GetPositions")]
-        static extern void VA_GetPositions(IntPtr va, out IntPtr positions, out int count);
+        [DllImport("__Internal", EntryPoint = "VA_SetVertices")]
+        static extern void VA_SetVertices(IntPtr va, Vertex[] vertices, int count);
+        [DllImport("__Internal", EntryPoint = "VA_GetVertices")]
+        static extern void VA_GetVertices(IntPtr va, out IntPtr vertices, out int count);
+
         [DllImport("__Internal", EntryPoint = "VA_Upload")]
         static extern void VA_Upload(IntPtr va);
         [DllImport("__Internal", EntryPoint = "VA_Bind")]
@@ -119,6 +116,6 @@ namespace Perhaps.Engine
         static extern void VA_GetIndices(IntPtr va, out IntPtr indices, out int count);
 
         [DllImport("__Internal", EntryPoint = "VA_SetIndices")]
-        static extern void VA_SetIndices(IntPtr va, uint[] indices, int count);
+        static extern void VA_SetIndices(IntPtr va, int[] indices, int count);
     }
 }

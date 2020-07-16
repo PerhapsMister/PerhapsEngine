@@ -18,9 +18,8 @@ namespace Perhaps
 
 			const char* options[]
 			{
-				"--debugger-agent=transport=dt_socket,server=y,suspend=n,timeout=20000,address=127.0.0.1:24040 --debug",
+				"--debugger-agent=transport=dt_socket,server=y,suspend=y,timeout=20000,address=127.0.0.1:24040 --debug",
 			};
-
 			mono_debug_init(MONO_DEBUG_FORMAT_MONO);
 			mono_jit_parse_options(1, (char**)options);
 
@@ -29,8 +28,11 @@ namespace Perhaps
 			mainDomain = mono_jit_init_version("Perhaps.Domain", runtime_version);
 			mono_thread_set_main(mono_thread_current());
 
-			std::string path = std::filesystem::current_path().string();
-			path = path + "\\Build-Debug-Bin\\" + editorDll;
+			//std::string path = std::filesystem::current_path().string();
+			//path = path + "\\Build-Debug-Bin\\" + editorDll;
+			std::string path = "D:\\Dev\\Dev\\PerhapsEngine\\PerhapsEngineNative\\Build-Debug-Bin\\";
+			path = path + editorDll;
+			conlog(path);
 
 			engineAssembly = mono_domain_assembly_open(mainDomain, path.c_str());
 

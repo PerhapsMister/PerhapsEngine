@@ -6,6 +6,7 @@
 #include "Systems/Graphics/VertexArray.h"
 #include "Systems/EventSystem/EventSystem.h"
 #include "Systems/GameLoop/GameLoop.h"
+#include "Systems/Graphics/RenderTexture.h"
 
 namespace Perhaps
 {
@@ -44,6 +45,12 @@ namespace Perhaps
 			mainWindow = Window::CreateWindow(width, height, title);
 			GameLoop::Init();
 
+			/*
+			RenderTexture renderTex(width, height);
+			renderTex.AttachColorTexture();
+			renderTex.AttachDepthStencilBuffer();
+			renderTex.Bind();
+			*/
 			while (!mainWindow->WindowCloseRequested())
 			{
 				mainWindow->PollEvents();

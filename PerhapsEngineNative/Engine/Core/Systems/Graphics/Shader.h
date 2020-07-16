@@ -106,6 +106,8 @@ namespace Perhaps
 				return location;
 			}
 
+			conlog("Invalid shader uniform \"" << name << "\"");
+
 			return -1;
 		}
 

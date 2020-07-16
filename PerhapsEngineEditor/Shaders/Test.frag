@@ -1,5 +1,6 @@
 #version 430 core
-out vec4 FragColor;  
+out vec4 FragColor;
+  
 
 float checker(vec2 uv, float repeats) 
 {
@@ -16,7 +17,7 @@ void main()
 
   vec2 uv = gl_FragCoord.xy * 0.1;
   uv.x *= texSize.x / texSize.y;
-  float c = mix(1.0, 0.0, checker(uv, 1f));
-  FragColor = vec4(c, c, c, 1.0); 
+  float c = mix(1.0, 0.0, checker(uv, 1.0f));
+  FragColor = vec4(c, c, c, 1.0);
     
 }

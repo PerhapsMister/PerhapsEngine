@@ -170,9 +170,6 @@ namespace Perhaps.Engine
         
         [DllImport("__Internal", EntryPoint = "Texture2D_GetDimensions")]
         static extern void Texture2D_GetDimensions(IntPtr tex, out Vector2 dimensions);
-
-      [DllImport("__Internal", EntryPoint = "Texture2D_LoadPixels")]
-        static extern void Texture2D_LoadPixels(IntPtr tex, IntPtr source);
         
         
     }

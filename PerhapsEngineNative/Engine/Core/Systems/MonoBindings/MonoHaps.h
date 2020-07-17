@@ -5,20 +5,18 @@
 namespace Perhaps
 {
 
-
-
-	const char* editorDll = "PerhapsEngineEditor.dll";
-
 	class MonoHaps
 	{
 	public:
+		
+
 		static void InitializeMono()
 		{
 			mono_set_dirs("C:\\Program Files (x86)\\Mono\\lib", "C:\\Program Files (x86)\\Mono\\etc");
 
 			const char* options[]
 			{
-				"--debugger-agent=transport=dt_socket,server=y,suspend=y,timeout=20000,address=127.0.0.1:24040 --debug",
+				"--debugger-agent=transport=dt_socket,server=y,suspend=n,timeout=20000,address=127.0.0.1:24040 --debug",
 			};
 			mono_debug_init(MONO_DEBUG_FORMAT_MONO);
 			mono_jit_parse_options(1, (char**)options);
@@ -31,6 +29,8 @@ namespace Perhaps
 			//std::string path = std::filesystem::current_path().string();
 			//path = path + "\\Build-Debug-Bin\\" + editorDll;
 			std::string path = "D:\\Dev\\Dev\\PerhapsEngine\\PerhapsEngineNative\\Build-Debug-Bin\\";
+
+			const char* editorDll = "PerhapsEngineEditor.dll";
 			path = path + editorDll;
 			conlog(path);
 
@@ -71,10 +71,5 @@ namespace Perhaps
 		static MonoObject* engineObject;
 		static MonoMethod* updateMethod;
 	};
-
-	MonoDomain* MonoHaps::mainDomain = nullptr;
-	MonoAssembly* MonoHaps::engineAssembly = nullptr;
-	MonoObject* MonoHaps::engineObject = nullptr;
-	MonoMethod* MonoHaps::updateMethod = nullptr;
 }
 #endif

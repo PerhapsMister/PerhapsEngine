@@ -6,6 +6,30 @@ namespace Perhaps
 	struct Vertex
 	{
 	public:
+		Vertex() : position(0,0,0), uv(0,0), normal(0,0,0)
+		{
+		}
+
+		Vertex(float x, float y) :position(x,y,0), uv(0,0), normal(0,0,0)
+		{
+
+		}
+		Vertex(float x, float y, float z) : position(x,y,z), uv(0,0), normal(0,0,0)
+		{
+			
+		}
+
+		Vertex(float x, float y, float u, float v) :position(x, y, 0), uv(u, v), normal(0, 0, 0)
+		{
+
+		}
+
+		Vertex(float x, float y, float z, float u, float v) : position(x, y, z), uv(u,v), normal(0,0,0)
+		{
+
+		}
+		
+
 		glm::vec3 position;
 		glm::vec2 uv;
 		glm::vec3 normal;
@@ -23,7 +47,24 @@ namespace Perhaps
 		~VertexArray()
 		{
 			if (bound == this)
+			{
 				Unbind();
+			}
+
+			if (vao != 0)
+			{
+				glDeleteVertexArrays(1, &vao);
+			}
+
+			if (vbo != 0)
+			{
+				glDeleteBuffers(1, &vbo);
+			}
+
+			if (ebo != 0)
+			{
+				glDeleteBuffers(1, &ebo);
+			}
 		}
 
 		void UploadData()
@@ -89,67 +130,18 @@ namespace Perhaps
 		static VertexArray* bound;
 		unsigned int vao = 0, vbo = 0, ebo = 0;
 
-		void BindCheck()
-		{
-			if (bound != nullptr)
-			{
-				bound->Bind();
-			}
-			else
-			{
-				Unbind();
-			}
-		}
+		void BindCheck();
 
 	};
-	VertexArray* VertexArray::bound = nullptr;
 
-	PAPI VertexArray* VA_Create()
-	{
-		VertexArray* va = new VertexArray();
-		return va;
-	}
-
-	PAPI void VA_Delete(VertexArray* va)
-	{
-		delete(va);
-	}
-
-	PAPI void VA_SetVertices(VertexArray* va, Vertex* vertices, int count)
-	{
-		va->vertices = std::vector<Vertex>(vertices, vertices + count);
-	}
-
-	PAPI void VA_GetVertices(VertexArray* va, Vertex** vertices, int* count)
-	{
-		*vertices = &va->vertices[0];
-		*count = va->vertices.size();
-	}
-
-	PAPI void VA_GetIndices(VertexArray* va, int** indices, int* count)
-	{
-		*indices = &va->indices[0];
-		*count = va->indices.size();
-	}
-
-	PAPI void VA_SetIndices(VertexArray* va, int* indices, int count)
-	{
-		va->indices = std::vector<int>(indices, indices + count);
-	}
-
-	PAPI void VA_Upload(VertexArray* va)
-	{
-		va->UploadData();
-	}
-
-	PAPI bool VA_Bind(VertexArray* va)
-	{
-		return va->Bind();
-	}
-
-	PAPI void VA_Unbind()
-	{
-		VertexArray::Unbind();
-	}
+	PAPI VertexArray* VA_Create();
+	PAPI void VA_Delete(VertexArray* va);
+	PAPI void VA_SetVertices(VertexArray* va, Vertex* vertices, int count);
+	PAPI void VA_GetVertices(VertexArray* va, Vertex** vertices, int* count);
+	PAPI void VA_GetIndices(VertexArray* va, int** indices, int* count);
+	PAPI void VA_SetIndices(VertexArray* va, int* indices, int count);
+	PAPI void VA_Upload(VertexArray* va);
+	PAPI bool VA_Bind(VertexArray* va);
+	PAPI void VA_Unbind();
 }
 #endif 

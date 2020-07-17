@@ -8,11 +8,12 @@
 
 namespace Perhaps
 {
+
 	class Graphics
 	{
 	public:
 
-		enum class ClearMask
+		enum class ColorMask
 		{
 			COLOR = 0x00004000, DEPTH = 0x00000100, STENCIL = 0x00000400,
 			COLOR_DEPTH = (int)COLOR | (int)DEPTH, COLOR_STENCIL = (int)COLOR | (int)STENCIL,
@@ -22,9 +23,16 @@ namespace Perhaps
 		enum class EnableParam
 		{
 			DEPTH_TEST = GL_DEPTH_TEST,
+			BLEND = GL_BLEND,
+			STENCIL = GL_STENCIL
 		};
 
-		static void Clear(ClearMask mask)
+		enum class BlendFunc
+		{
+			ONE_MINUS_SRC_ALPHA = GL_ONE_MINUS_SRC_ALPHA,
+		};
+
+		static void Clear(ColorMask mask)
 		{
 			glClear((int)mask);
 		}
@@ -34,11 +42,11 @@ namespace Perhaps
 			glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
 		}
 
-		static void Draw(VertexArray* va)
+		static void Draw(VertexArray& va)
 		{
-			if (va->Bind())
+			if (va.Bind())
 			{
-				glDrawElements(GL_TRIANGLES, va->indices.size(), GL_UNSIGNED_INT, 0);
+				glDrawElements(GL_TRIANGLES, va.indices.size(), GL_UNSIGNED_INT, 0);
 			}
 			else
 			{
@@ -46,10 +54,14 @@ namespace Perhaps
 			}
 		}
 
-		void OnResize(const Event& event)
+		static void DrawLine()
 		{
-			ResizeEvent& e = (ResizeEvent&)event;
-			glViewport(0, 0, e.newSize.x, e.newSize.y);
+			
+		}
+
+		static void SetDrawDimensions(int x, int y, int width, int height)
+		{
+			glViewport(x, y, width, height);
 		}
 
 		static void Enable(EnableParam param, bool value)
@@ -66,43 +78,24 @@ namespace Perhaps
 			}
 		}
 
+		static void SetBlendFunc(BlendFunc func)
+		{
+			GLenum f = (GLenum)func;
+			glBlendFunc(GL_SRC_ALPHA, f);
+		}
+
 	private:
-		static Graphics initializer;
-
-		int mId0;
-		Graphics()
-		{
-			mId0 = EventDispatcher::Subscribe(ResizeEvent::descriptor, std::bind(&Graphics::OnResize, this, std::placeholders::_1));
-		}
-
-		~Graphics()
-		{
-			EventDispatcher::UnSubscribe(mId0);
-		}
 
 	};
-	Graphics Graphics::initializer;
 
+	PAPI void Graphics_Clear(Graphics::ColorMask mask);
 
-	PAPI void Graphics_Clear(Graphics::ClearMask mask)
-	{
-		Graphics::Clear(mask);
-	}
+	PAPI void Graphics_SetClearColor(Color color);
 
-	PAPI void Graphics_SetClearColor(Color color)
-	{
-		Graphics::SetClearColor(color);
-	}
+	PAPI void Graphics_Draw(VertexArray* va);
 
-	PAPI void Graphics_Draw(VertexArray* va)
-	{
-		Graphics::Draw(va);
-	}
-
-	PAPI void Graphics_Enable(Graphics::EnableParam param, bool value)
-	{
-		Graphics::Enable(param, value);
-	}
+	PAPI void Graphics_Enable(Graphics::EnableParam param, bool value);
 }
+
 
 #endif

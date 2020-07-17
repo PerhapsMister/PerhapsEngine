@@ -97,8 +97,6 @@ namespace Perhaps
 				else
 				{
 					std::invoke(observerList[i]->slot, event);
-					//observerList[i].slot
-					//observerList[i].slot(event);
 				}
 			}
 		}
@@ -108,9 +106,6 @@ namespace Perhaps
 		static std::map<int, StoredFunction*> idToFun;
 		static int idReel;
 	};
-	std::map<Event::DescriptorType, std::vector<EventDispatcher::StoredFunction*>> EventDispatcher::observers;
-	std::map<int, EventDispatcher::StoredFunction*> EventDispatcher::idToFun;
-	int EventDispatcher::idReel = 0;
 
 }
 #endif

@@ -56,6 +56,7 @@ void main()
         void Init()
         {
             Console.WriteLine($"C# dll initialized. Domain: {AppDomain.CurrentDomain.FriendlyName} Version: {typeof(string).Assembly.ImageRuntimeVersion}");
+            /*
             va = VertexArray.CreateArray();
 
 /*
@@ -66,7 +67,7 @@ void main()
                 new Vector3(1f, 1f, 0f),//top right
                 new Vector3(-1f, -1f, 0f),//bottom left
             };
-            */
+            
             Vector3[] pos = new Vector3[]
             {
                 new Vector3(-0.5f, 0.5f, 0f),//top left
@@ -111,6 +112,7 @@ void main()
             fullScreenQuadShader = Shader.CompileShader(screenQuadVs,screenQuadFs);
 
             texture = AssetImporter.ImportTexture("D:\\Dev\\Dev\\PerhapsEngine\\PerhapsEngineEditor\\Images\\shrek.jpg");
+            */
         }
 
         Texture2D texture;
@@ -130,6 +132,7 @@ void main()
         void Update()
         {
             Time.OnFrameStart();
+            /*
             Graphics.SetClearColor(new Vector4(0.5f, 0.5f, 1f, 1f));
             Graphics.Clear(Graphics.ClearMask.COLOR_DEPTH_STENCIL);
             

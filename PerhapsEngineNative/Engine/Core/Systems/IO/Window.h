@@ -109,8 +109,6 @@ namespace Perhaps
 			EventDispatcher::DispatchEvent(e);
 		}
 	};
-	std::map<GLFWwindow*, Window*> Window::activeWindows;
-	bool Window::glfwInitialized = false;
 }
 
 #endif

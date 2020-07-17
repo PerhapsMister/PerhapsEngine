@@ -2,37 +2,33 @@
 #define PERHAPS_RENDER_TEXTURE
 #include "../../PerhapsPch.h"
 #include "Texture2D.h"
+#include "Graphics.h"
 
 namespace Perhaps
 {
+	class Graphics;
+
 	class RenderTexture
 	{
 	public:
-		RenderTexture(int width, int height)
-		{
-			mWidth = width;
-			mHeight = height;
-			InitFbo();
-		}
 
-		~RenderTexture()
-		{
-			if (bound == this)
-				Unbind();
-
-			glDeleteFramebuffers(1, &fbo);
-			delete(colorAttachment);
-		}
+		RenderTexture(int width, int height) : mWidth(width), mHeight(height) {}
 
 		void AttachColorTexture()
 		{
-			colorAttachment = new Texture2D(mWidth, mHeight);
-			colorAttachment->format = Texture2D::TextureFormat::RGB;
-			colorAttachment->filterMode = Texture2D::FilterMode::LINEAR;
-			colorAttachment->generateMips = false;
-			colorAttachment->Apply();
+			if (!initialized)
+			{
+				InitFbo();
+			}
 
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorAttachment->GetId(), 0);
+			colorTexture = new Texture2D(mWidth, mHeight);
+			colorTexture->format = Texture2D::TextureFormat::RGB;
+			colorTexture->Apply();
+
+			int texId = colorTexture->GetId();
+			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texId, 0);
+			BindCheck();
 		}
 
 		void AttachDepthStencilBuffer()
@@ -42,48 +38,79 @@ namespace Perhaps
 				InitRbo();
 			}
 
-			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, mWidth, mHeight);
-			glBindRenderbuffer(GL_RENDERBUFFER, 0);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-
 			BindCheck();
 		}
 
 		bool Bind()
 		{
-			if(fbo == 0)
-				return false;
-
 			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		 	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+			if (status != GL_FRAMEBUFFER_COMPLETE)
 			{
-				conlog("Framebuffer incomplete!");
-				BindCheck();
-
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+				conlog("Fbo incomplete! Enum: " << status);
 				return false;
 			}
 
-			bound = this;
+			if(colorTexture != nullptr)
+				colorTexture->Unbind();
+
 			return true;
 		}
 
 		static void Unbind()
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-			bound = nullptr;
 		}
 
-		Texture2D* GetColorAttachment()
+		Texture2D* GetColorAttachment() const
 		{
-			return colorAttachment;
+			return colorTexture;
+		}
+
+		/// <summary>
+		/// Copy the contents of one render texture onto another.
+		/// </summary>
+		/// <param name="sender">The data source</param>
+		/// <param name="receiver">The data destination</param>
+		/// <param name="color">What textures to copy</param>
+		/// <param name="mode">Scaling algorithm</param>
+		static void Blit(RenderTexture& sender, RenderTexture& receiver, Graphics::ColorMask color, Texture2D::FilterMode mode)
+		{
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, sender.fbo);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, receiver.fbo);
+			glBlitFramebuffer(0,0, sender.mWidth, sender.mHeight, 0,0, receiver.mWidth, receiver.mHeight, (GLbitfield)color, (GLenum)mode);
+
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+			receiver.BindCheck();
 		}
 
 	private:
-		static RenderTexture* bound;
 		unsigned int fbo = 0, rbo = 0;
-		int mWidth = 0, mHeight = 0;
-		Texture2D* colorAttachment;
+		int mWidth, mHeight;
+		static RenderTexture* bound;
+
+		bool initialized = fbo != 0;
+
+		void InitFbo()
+		{
+			glGenFramebuffers(1, &fbo);
+		}
+
+		void InitRbo()
+		{
+			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+			glGenRenderbuffers(1, &rbo);
+			glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, mWidth, mHeight);
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+				std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
 
 		void BindCheck()
 		{
@@ -97,55 +124,17 @@ namespace Perhaps
 			}
 		}
 
-
-		void InitRbo()
-		{
-			glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-			glGenRenderbuffers(1, &rbo);
-		}
-
-		void InitFbo()
-		{
-			glGenFramebuffers(1, &fbo);
-		}
+		Texture2D* colorTexture = nullptr;
 	};
-	RenderTexture* RenderTexture::bound = nullptr;
 
-	PAPI RenderTexture* RenderTexture_Create(int width, int height)
-	{
-		RenderTexture* rt = new RenderTexture(width, height);
-		return rt;
-	}
-
-	PAPI void RenderTexture_Delete(RenderTexture* rt)
-	{
-		delete(rt);
-	}
-
-	PAPI bool RenderTexture_Bind(RenderTexture* rt)
-	{
-		return rt->Bind();
-	}
-
-	PAPI void RenderTexture_UnBind()
-	{
-		RenderTexture::Unbind();
-	}
-
-	PAPI void RenderTexture_AttachColorTexture(RenderTexture* rt)
-	{
-		rt->AttachColorTexture();
-	}
-
-	PAPI void RenderTexture_AttachDepthStencilBuffer(RenderTexture* rt)
-	{
-		rt->AttachDepthStencilBuffer();
-	}
-
-	PAPI Texture2D* RenderTexture_GetColorAttachment(RenderTexture* rt)
-	{
-		return rt->GetColorAttachment();
-	}
+	
+	PAPI RenderTexture* RenderTexture_Create(int width, int height);
+	PAPI void RenderTexture_Delete(RenderTexture* rt);
+	PAPI bool RenderTexture_Bind(RenderTexture* rt);
+	PAPI void RenderTexture_UnBind();
+	PAPI void RenderTexture_AttachColorTexture(RenderTexture* rt);
+	PAPI void RenderTexture_AttachDepthStencilBuffer(RenderTexture* rt);
+	PAPI Texture2D* RenderTexture_GetColorAttachment(RenderTexture* rt);
 }
 
 #endif

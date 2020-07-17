@@ -25,6 +25,7 @@
 #include <map>
 #include <filesystem>
 #include <exception>
+#include <array>
 
 #define conlog(x) std::cout << x << "\n";
 typedef glm::vec4 Color;

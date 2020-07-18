@@ -20,6 +20,7 @@
 #include "mono/metadata/mono-debug.h"
 #include "mono/metadata/threads.h"
 
+#include <thread>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -36,5 +37,15 @@
 typedef glm::vec4 Color;
 
 #define PAPI extern "C" __declspec(dllexport)
+
+void __M_Assert(const char* expr_str, bool expr, const char* file, int line, const char* msg);
+#ifndef NDEBUG
+#   define passert(Expr, Msg) \
+    __M_Assert(#Expr, Expr, __FILE__, __LINE__, Msg)
+#else
+#   define passert(Expr, Msg) ;
+#endif
+
+
 
 #endif

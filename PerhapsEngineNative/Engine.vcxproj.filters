@@ -18,9 +18,6 @@
     <ClInclude Include="Engine\Core\PerhapsPch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Core\Engine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Core\Systems\IO\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1059,6 +1056,12 @@
     <ClInclude Include="Engine\Core\Systems\Graphics\RendererBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\Systems\Tools\Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\PerhapsPch.cpp">
@@ -1103,9 +1106,6 @@
     <ClCompile Include="Engine\Core\Systems\GameLoop\GameLoop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Core\Engine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Core\Systems\Graphics\Renderer2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1131,6 +1131,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Vendor\ImGui\imgui_demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Core\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

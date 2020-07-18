@@ -1,13 +1,8 @@
-#ifndef PERHAPS_ENTRY
-#define PERHAPS_ENTRY
-#include "Engine.h"
+#include "Application.h"
 
-int main()
+int main(int argc, char** argv)
 {
-	Perhaps::PerhapsEngine::Initialize();
-	
+	Perhaps::Application::Start(argc, argv);
 
 	return 0;
 }
-
-#endif

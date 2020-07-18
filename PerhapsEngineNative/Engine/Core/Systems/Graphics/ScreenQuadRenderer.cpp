@@ -1,9 +1,9 @@
 #include "ScreenQuadRenderer.h"
-#include "../../Engine.h"
+#include "../../Application.h"
 
 namespace Perhaps
 {
-	class PerhapsEngine;
+	class Application;
 	
 	void ScreenQuadRenderer::Initialize()
 	{
@@ -55,7 +55,7 @@ namespace Perhaps
 
 	void ScreenQuadRenderer::Render(RenderTexture& rt)
 	{
-		Window* window = PerhapsEngine::GetWindow();
+		Window* window = Application::GetInstance()->GetWindow();
 
 		glm::vec2 dimensions = window->GetDimensions();
 		Graphics::SetDrawDimensions(0, 0, dimensions.x, dimensions.y);

@@ -28,8 +28,13 @@ namespace Perhaps
 
 
 			RendererBase::RegisterRenderer(renderer2D, 1);
-			RendererBase::RegisterRenderer(scr, 2);
+
+			#ifdef _DEBUG
 			RendererBase::RegisterRenderer(imguiRenderer, 3);
+			#else
+			RendererBase::RegisterRenderer(scr, 2);
+			#endif
+
 			MonoHaps::InitializeMono();
 		}
 

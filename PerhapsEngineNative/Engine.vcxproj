@@ -176,8 +176,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\Application.h" />
     <ClInclude Include="Engine\Core\Core.h" />
-    <ClInclude Include="Engine\Core\Engine.h" />
     <ClInclude Include="Engine\Core\PerhapsPch.h" />
     <ClInclude Include="Engine\Core\Systems\EventSystem\EventSystem.h" />
     <ClInclude Include="Engine\Core\Systems\EventSystem\EngineEvents.h" />
@@ -194,6 +194,7 @@
     <ClInclude Include="Engine\Core\Systems\MonoBindings\MonoHaps.h" />
     <ClInclude Include="Engine\Core\Systems\Assets\Assets.h" />
     <ClInclude Include="Engine\Core\Systems\Assets\Importer.h" />
+    <ClInclude Include="Engine\Core\Systems\Tools\Utils.h" />
     <ClInclude Include="Engine\Vendor\ImGui\imconfig.h" />
     <ClInclude Include="Engine\Vendor\ImGui\imgui.h" />
     <ClInclude Include="Engine\Vendor\ImGui\imgui_impl_glfw.h" />
@@ -526,7 +527,7 @@
     <ClInclude Include="Engine\Vendor\GLM\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\Core\Engine.cpp" />
+    <ClCompile Include="Engine\Core\Application.cpp" />
     <ClCompile Include="Engine\Core\main.cpp" />
     <ClCompile Include="Engine\Core\PerhapsPch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

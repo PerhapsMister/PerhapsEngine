@@ -20,5 +20,17 @@ namespace Perhaps
 			return descriptor;
 		}
 	};
+
+
+	class ImGuiRenderEvent : public Event
+	{
+		public:
+
+			static constexpr const char* descriptor = "ImGuiRender";
+			virtual DescriptorType GetType() const
+			{
+				return descriptor;
+			}
+	};
 }
 #endif

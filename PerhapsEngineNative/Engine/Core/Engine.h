@@ -20,14 +20,9 @@ namespace Perhaps
 			}
 		}
 
-		static PerhapsEngine* Singleton()
+		static Window* GetWindow()
 		{
-			return instance;
-		}
-
-		Window* GetWindow()
-		{
-			return mainWindow;
+			return instance->mainWindow;
 		}
 
 	private:
@@ -35,6 +30,9 @@ namespace Perhaps
 		Window* mainWindow;
 
 		void Begin();
+
+
+		PerhapsEngine() {}
 	};
 }
 

@@ -5,7 +5,7 @@
 
 namespace Perhaps
 {
-	class Renderer
+	class RendererBase
 	{
 	public:
 
@@ -14,7 +14,7 @@ namespace Perhaps
 		/// </summary>
 		/// <param name="renderer"></param>
 		/// <param name="priority"></param>
-		static void RegisterRenderer(Renderer* renderer, int priority)
+		static void RegisterRenderer(RendererBase* renderer, int priority)
 		{
 			if (registeredRenderers.find(priority) != registeredRenderers.end())
 			{
@@ -36,7 +36,7 @@ namespace Perhaps
 			for (size_t i = 0; i < registeredPriorities.size(); i++)
 			{
 				int priority = registeredPriorities[i];
-				Renderer* renderer = registeredRenderers[priority];
+				RendererBase* renderer = registeredRenderers[priority];
 				renderer->Render(buffer);
 			}
 		}
@@ -46,7 +46,7 @@ namespace Perhaps
 			for (size_t i = 0; i < registeredPriorities.size(); i++)
 			{
 				int priority = registeredPriorities[i];
-				Renderer* renderer = registeredRenderers[priority];
+				RendererBase* renderer = registeredRenderers[priority];
 				renderer->OnCleanup();
 			}
 
@@ -59,7 +59,7 @@ namespace Perhaps
 		virtual void OnCleanup() {};
 
 	private:
-		static std::unordered_map<int, Renderer*> registeredRenderers;
+		static std::unordered_map<int, RendererBase*> registeredRenderers;
 		static std::vector<int> registeredPriorities;
 	};
 

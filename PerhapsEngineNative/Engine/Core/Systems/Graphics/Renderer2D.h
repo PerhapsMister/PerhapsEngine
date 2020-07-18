@@ -2,14 +2,14 @@
 #define PERHAPS_RENDERER_2D
 #include "../../PerhapsPch.h"
 #include "Graphics.h"
-#include "Renderer.h"
+#include "RendererBase.h"
 #include "Shader.h"
 #include "../Assets/Importer.h"
 #include "RenderTexture.h"
 
 namespace Perhaps
 {
-	class Renderer2D : public Renderer
+	class Renderer2D : public RendererBase
 	{
 	public:
 		VertexArray va;

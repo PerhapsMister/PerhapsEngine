@@ -55,7 +55,7 @@ namespace Perhaps
 
 	void ScreenQuadRenderer::Render(RenderTexture& rt)
 	{
-		Window* window = PerhapsEngine::Singleton()->GetWindow();
+		Window* window = PerhapsEngine::GetWindow();
 
 		glm::vec2 dimensions = window->GetDimensions();
 		Graphics::SetDrawDimensions(0, 0, dimensions.x, dimensions.y);

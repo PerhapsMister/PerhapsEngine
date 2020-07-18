@@ -1,5 +1,6 @@
 #ifndef PERHAPS_PCH
 #define PERHAPS_PCH
+
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
@@ -8,6 +9,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "../Vendor/stb/stb_image.h"
 #include "entt/entt.hpp"
+
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"

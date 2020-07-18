@@ -2,11 +2,11 @@
 #define PERHAPS_SCREEN_RENDERER
 #include "../../PerhapsPch.h"
 #include "Graphics.h"
-#include "Renderer.h"
+#include "RendererBase.h"
 
 namespace Perhaps
 {
-	class ScreenQuadRenderer : public Renderer
+	class ScreenQuadRenderer : public RendererBase
 	{
 	public:
 

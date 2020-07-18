@@ -3,9 +3,10 @@
 #include "../../PerhapsPch.h"
 #include "../MonoBindings/MonoHaps.h"
 #include "../Graphics/Graphics.h"
-#include "../Graphics/Renderer.h"
+#include "../Graphics/Rendererbase.h"
 #include "../Graphics/Renderer2D.h"
 #include "../Graphics/ScreenQuadRenderer.h"
+#include "../Graphics/ImGui/RendererImGui.h"
 
 namespace Perhaps
 {
@@ -20,30 +21,36 @@ namespace Perhaps
 			renderer2D = new Renderer2D();
 			scr = new ScreenQuadRenderer();
 			mainRt = new RenderTexture(1280, 720);
+			imguiRenderer = new RendererImGui();
+
 			mainRt->AttachColorTexture();
 			mainRt->AttachDepthStencilBuffer();
 
 
-			Renderer::RegisterRenderer(renderer2D, 1);
-			Renderer::RegisterRenderer(scr, 2);
+			RendererBase::RegisterRenderer(renderer2D, 1);
+			RendererBase::RegisterRenderer(scr, 2);
+			RendererBase::RegisterRenderer(imguiRenderer, 3);
 			MonoHaps::InitializeMono();
 		}
 
 		static void OnUpdate()
 		{
 			MonoHaps::UpdateManaged();
-			Renderer::RunRenderers(*mainRt);
+			RendererBase::RunRenderers(*mainRt);
 		}
 
 		static void Cleanup()
 		{
-			Renderer::Cleanup();
+			RendererBase::Cleanup();
 			delete(renderer2D);
+			delete(scr);
+			delete(imguiRenderer);
 		}
 	private:
-		static Renderer2D* renderer2D;
 		static RenderTexture* mainRt;
+		static Renderer2D* renderer2D;
 		static ScreenQuadRenderer* scr;
+		static RendererImGui* imguiRenderer;
 	};
 }
 

@@ -95,9 +95,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMGUI_IMPL_OPENGL_LOADER_GLAD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;$(ProjectDir)Engine\Vendor\entt\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;$(ProjectDir)Engine\Vendor\entt\;$(ProjectDir)Engine\Vendor\ImGui\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -116,9 +116,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMGUI_IMPL_OPENGL_LOADER_GLAD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;$(ProjectDir)Engine\Vendor\entt\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;$(ProjectDir)Engine\Vendor\entt\;$(ProjectDir)Engine\Vendor\ImGui\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -137,9 +137,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMGUI_IMPL_OPENGL_LOADER_GLAD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;$(ProjectDir)Engine\Vendor\entt\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;$(ProjectDir)Engine\Vendor\entt\;$(ProjectDir)Engine\Vendor\ImGui\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -158,9 +158,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMGUI_IMPL_OPENGL_LOADER_GLAD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;$(ProjectDir)Engine\Vendor\entt\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine\Vendor\Glad\include;$(ProjectDir)Engine\Vendor\GLFW\include;$(ProjectDir)Engine\Vendor\Mono\include\mono-2.0\;$(ProjectDir)Engine\Vendor\GLM\;$(ProjectDir)Engine\Vendor\entt\;$(ProjectDir)Engine\Vendor\ImGui\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -183,7 +183,8 @@
     <ClInclude Include="Engine\Core\Systems\EventSystem\EngineEvents.h" />
     <ClInclude Include="Engine\Core\Systems\GameLoop\GameLoop.h" />
     <ClInclude Include="Engine\Core\Systems\Graphics\Graphics.h" />
-    <ClInclude Include="Engine\Core\Systems\Graphics\Renderer.h" />
+    <ClInclude Include="Engine\Core\Systems\Graphics\ImGui\RendererImGui.h" />
+    <ClInclude Include="Engine\Core\Systems\Graphics\RendererBase.h" />
     <ClInclude Include="Engine\Core\Systems\Graphics\Renderer2D.h" />
     <ClInclude Include="Engine\Core\Systems\Graphics\ScreenQuadRenderer.h" />
     <ClInclude Include="Engine\Core\Systems\Graphics\Shader.h" />
@@ -193,6 +194,14 @@
     <ClInclude Include="Engine\Core\Systems\MonoBindings\MonoHaps.h" />
     <ClInclude Include="Engine\Core\Systems\Assets\Assets.h" />
     <ClInclude Include="Engine\Core\Systems\Assets\Importer.h" />
+    <ClInclude Include="Engine\Vendor\ImGui\imconfig.h" />
+    <ClInclude Include="Engine\Vendor\ImGui\imgui.h" />
+    <ClInclude Include="Engine\Vendor\ImGui\imgui_impl_glfw.h" />
+    <ClInclude Include="Engine\Vendor\ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Engine\Vendor\ImGui\imgui_internal.h" />
+    <ClInclude Include="Engine\Vendor\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="Engine\Vendor\ImGui\imstb_textedit.h" />
+    <ClInclude Include="Engine\Vendor\ImGui\imstb_truetype.h" />
     <ClInclude Include="Engine\Vendor\Mono\include\mono-2.0\mono\jit\jit.h" />
     <ClInclude Include="Engine\Vendor\Mono\include\mono-2.0\mono\metadata\appdomain.h" />
     <ClInclude Include="Engine\Vendor\Mono\include\mono-2.0\mono\metadata\assembly.h" />
@@ -532,7 +541,8 @@
     <ClCompile Include="Engine\Core\Systems\EventSystem\EventSystem.cpp" />
     <ClCompile Include="Engine\Core\Systems\GameLoop\GameLoop.cpp" />
     <ClCompile Include="Engine\Core\Systems\Graphics\Graphics.cpp" />
-    <ClCompile Include="Engine\Core\Systems\Graphics\Renderer.cpp" />
+    <ClCompile Include="Engine\Core\Systems\Graphics\ImGui\RendererImGui.cpp" />
+    <ClCompile Include="Engine\Core\Systems\Graphics\RendererBase.cpp" />
     <ClCompile Include="Engine\Core\Systems\Graphics\Renderer2D.cpp" />
     <ClCompile Include="Engine\Core\Systems\Graphics\RenderTexture.cpp" />
     <ClCompile Include="Engine\Core\Systems\Graphics\ScreenQuadRenderer.cpp" />
@@ -543,6 +553,12 @@
     <ClCompile Include="Engine\Core\Systems\MonoBindings\MonoHaps.cpp" />
     <ClCompile Include="Engine\Vendor\Glad\glad.c" />
     <ClCompile Include="Engine\Vendor\GLM\glm\detail\glm.cpp" />
+    <ClCompile Include="Engine\Vendor\ImGui\imgui.cpp" />
+    <ClCompile Include="Engine\Vendor\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Engine\Vendor\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Engine\Vendor\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Engine\Vendor\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Engine\Vendor\ImGui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Vendor\GLM\glm\detail\func_common.inl" />

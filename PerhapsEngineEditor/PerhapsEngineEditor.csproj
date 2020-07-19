@@ -15,5 +15,9 @@
     <PackageReference Include="AssimpNet" Version="5.0.0-beta1" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /Y /E &quot;D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\bin\Debug\net461&quot; &quot;D:\Dev\Dev\PerhapsEngine\PerhapsEngineNative\Build-Debug-Bin&quot;" />
+  </Target>
   
 </Project>

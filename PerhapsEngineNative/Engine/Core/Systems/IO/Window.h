@@ -55,6 +55,11 @@ namespace Perhaps
 			conlog("GLFW Error code: " << error << " Reason: " << description);
 		}
 	};
+
+	PAPI glm::vec2 Window_GetDimensions(Window* window)
+	{
+		return window->GetDimensions();
+	}
 }
 
 #endif

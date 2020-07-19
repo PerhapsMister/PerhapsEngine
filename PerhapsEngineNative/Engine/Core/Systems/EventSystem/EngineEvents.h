@@ -1,6 +1,7 @@
 #ifndef PERHAPS_RESIZE_EVENT
 #define PERHAPS_RESIZE_EVENT
 #include "EventSystem.h"
+#include "../Graphics/RenderTexture.h"
 
 namespace Perhaps
 {
@@ -25,6 +26,7 @@ namespace Perhaps
 	class ImGuiRenderEvent : public Event
 	{
 		public:
+			RenderTexture* rt;
 
 			static constexpr const char* descriptor = "ImGuiRender";
 			virtual DescriptorType GetType() const

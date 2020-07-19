@@ -1,6 +1,10 @@
 #ifndef PERHAPS_MONO
 #define PERHAPS_MONO
 #include "../../PerhapsPch.h"
+#include "../EventSystem/EventSystem.h"
+#include "../EventSystem/EngineEvents.h"
+#include "../Graphics/RenderTexture.h"
+#include "../../Application.h"
 
 namespace Perhaps
 {
@@ -46,18 +50,20 @@ namespace Perhaps
 				char* argv[1] = { (char*)"TestAssembly" };
 
 				MonoImage* image = mono_assembly_get_image(engineAssembly);
-				MonoClass* engineClass = mono_class_from_name(image, "Perhaps.Engine", "PerhapsEngine");
+				MonoClass* engineClass = mono_class_from_name(image, "Perhaps.Engine.Editor", "EditorApplication");
 				engineObject = mono_object_new(mainDomain, engineClass);
 				mono_runtime_object_init(engineObject);
 
-				MonoMethodDesc* onInitDesc = mono_method_desc_new("Perhaps.Engine:OnInitialize()", false);
-				MonoMethod* onInitializeMethod = mono_method_desc_search_in_class(onInitDesc, engineClass);
+				MonoMethod* onInitializeMethod = mono_class_get_method_from_name(engineClass, "Initialize", 1);
+				updateMethod = mono_class_get_method_from_name(engineClass, "Update", 0);
+				guiUpdateMethod = mono_class_get_method_from_name(engineClass, "OnEditorGuiRender", 1);
 
-				MonoMethodDesc* onUpdateDesc = mono_method_desc_new("Perhaps.Engine:OnUpdate()", false);
-				updateMethod = mono_method_desc_search_in_class(onUpdateDesc, engineClass);
 
+				 Application::GetInstance()->GetWindow();
 				mono_runtime_invoke(onInitializeMethod, engineObject, NULL, NULL);
 			}
+
+			EventDispatcher::Subscribe(ImGuiRenderEvent::descriptor, UpdateManagedGui);
 		}
 
 		static void UpdateManaged()
@@ -65,11 +71,22 @@ namespace Perhaps
 			mono_runtime_invoke(updateMethod, engineObject, NULL, NULL);
 		}
 
+		static void UpdateManagedGui(const Event& e)
+		{
+			ImGuiRenderEvent& renderEvent = (ImGuiRenderEvent&)e;
+
+			void* args[1];
+			args[0] = &renderEvent.rt;
+
+			mono_runtime_invoke(guiUpdateMethod, engineObject, args, NULL);
+		}
+
 	private:
 		static MonoDomain* mainDomain;
 		static MonoAssembly* engineAssembly;
 		static MonoObject* engineObject;
 		static MonoMethod* updateMethod;
+		static MonoMethod* guiUpdateMethod;
 	};
 }
 #endif

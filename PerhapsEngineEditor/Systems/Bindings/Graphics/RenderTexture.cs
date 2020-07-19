@@ -14,6 +14,12 @@ namespace Perhaps.Engine
 
             return rt;
         }
+
+        public RenderTexture(IntPtr nativeRenderTexture)
+        {
+            mNativeObject = nativeRenderTexture;
+        }
+
         private RenderTexture(){}
 
         public void Bind()
@@ -65,6 +71,6 @@ namespace Perhaps.Engine
         [DllImport("__Internal", EntryPoint = "RenderTexture_AttachDepthStencilBuffer")]
         static extern void RenderTexture_AttachDepthStencilBuffer(IntPtr rt);
         [DllImport("__Internal", EntryPoint = "RenderTexture_GetColorAttachment")]
-        static extern IntPtr RenderTexture_GetColorAttachment(IntPtr tex);
+        static extern IntPtr RenderTexture_GetColorAttachment(IntPtr rt);
     }
 }

@@ -56,11 +56,9 @@ namespace Perhaps.Engine
             return tex;
         }
 
-        public static Texture2D FromNativeData(IntPtr data, int width, int height)
+        public IntPtr GetNativeObject()
         {
-            Texture2D tex = new Texture2D(data, width, height);
-            Texture2D_LoadPixels(tex.mNativeObject, data);
-            return tex;
+            return mNativeObject;
         }
 
         public TextureFormat format
@@ -124,19 +122,19 @@ namespace Perhaps.Engine
             return new Vector2(mWidth, mHeight);
         }
 
-        public void Bind()
-        {
-            Texture2D_Bind(mNativeObject);
-        }
-
         public void Bind(int slot)
         {
             Texture2D_Bind_Slot(mNativeObject, slot);
         }
 
-        public static void UnBind(int slot)
+        public void UnBind()
         {
-            Texture2D_UnBind(slot);
+            Texture2D_UnBind(mNativeObject);
+        }
+        
+        public static void UnbindAll()
+        {
+            Texture2D_UnBindAll();
         }
 
         [DllImport("__Internal", EntryPoint = "Texture2D_Create")]
@@ -159,14 +157,13 @@ namespace Perhaps.Engine
         
         [DllImport("__Internal", EntryPoint = "Texture2D_Apply")]
         static extern void Texture2D_Apply(IntPtr tex);
-        
-        [DllImport("__Internal", EntryPoint = "Texture2D_Bind")]
-        static extern void Texture2D_Bind(IntPtr tex);
         [DllImport("__Internal", EntryPoint = "Texture2D_Bind_Slot")]
         static extern void Texture2D_Bind_Slot(IntPtr tex, int slot);
         
         [DllImport("__Internal", EntryPoint = "Texture2D_UnBind")]
-        static extern void Texture2D_UnBind(int slot);
+        static extern void Texture2D_UnBind(IntPtr tex);
+        [DllImport("__Internal", EntryPoint = "Texture2D_UnBindAll")]
+        static extern void Texture2D_UnBindAll();
         
         [DllImport("__Internal", EntryPoint = "Texture2D_GetDimensions")]
         static extern void Texture2D_GetDimensions(IntPtr tex, out Vector2 dimensions);

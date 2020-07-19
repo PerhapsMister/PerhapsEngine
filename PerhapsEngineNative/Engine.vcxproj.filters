@@ -1062,6 +1062,9 @@
     <ClInclude Include="Engine\Core\Systems\Tools\Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Core\Systems\MonoBindings\MonoGui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Core\PerhapsPch.cpp">

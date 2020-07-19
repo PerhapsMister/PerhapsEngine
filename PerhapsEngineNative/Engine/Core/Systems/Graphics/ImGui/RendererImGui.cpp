@@ -55,8 +55,8 @@ namespace Perhaps
 			window_flags |= ImGuiWindowFlags_NoBackground;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-		static bool open = true;
-		ImGui::Begin("Docking", &open, window_flags);
+		ImGui::Begin("Docking", NULL, window_flags);
+
 		ImGui::PopStyleVar();
 		ImGui::PopStyleVar(2);
 
@@ -68,10 +68,17 @@ namespace Perhaps
 		/* vvv Start rendering app vvv */
 
 		ImGuiRenderEvent renderEvent;
+		renderEvent.rt = &gameRender;
+
 		EventDispatcher::DispatchEvent(renderEvent);
 
+
+
+		/*
+		
 		static bool styleEditor = false;
 		static bool showScene = true;
+
 		static bool buildWindow = false;
 		if (ImGui::BeginMenuBar())
 		{
@@ -100,14 +107,13 @@ namespace Perhaps
 		}
 
 		if (showScene)
-		{		
+		{
 			static ImGuiWindowFlags sceneWindowFlags = ImGuiDockNodeFlags_None;
 			sceneWindowFlags |= ImGuiWindowFlags_NoCollapse;
 
 			static bool showScene = true;
 			if (ImGui::Begin("Game  Scene", &showScene, sceneWindowFlags))
 			{
-
 				bool docked = ImGui::IsWindowDocked();
 				ImGui::BeginGroup();
 
@@ -149,9 +155,8 @@ namespace Perhaps
 			}
 		}
 
-		if (styleEditor)
+		if (styleEditor && ImGui::Begin("Editor Styles"))
 		{
-			ImGui::Begin("Editor Styles");
 			ImGui::ShowStyleEditor();
 			ImGui::End();
 		}
@@ -162,11 +167,77 @@ namespace Perhaps
 			std::string root = "D:\\Dev\\Dev\\PerhapsEngine\\PerhapsEngineNative\\Build-Debug-Bin";
 			ImGui::Text(root.c_str());
 
-
 			if (ImGui::TreeNode("File view"))
 			{
+				const int max_columns = 2;
 
+				std::vector<std::string> files =
+				{
+					"hello.h",
+					"hello.cpp",
+					"vertex.shader",
+					"fragment.shader",
+					"shrek.png"
+				};
+				static int selectedIndex = -1;
 
+				ImGui::Columns(max_columns, NULL, true);
+				for (size_t i = 0; i < files.size(); i++)
+				{
+
+					ImGui::PushID(i);
+
+					const char* file = files[i].c_str();
+					if (ImGui::Selectable(file, selectedIndex == i))
+					{
+						selectedIndex = i;
+						ImGui::CloseCurrentPopup();
+					}
+
+					if (ImGui::IsItemClicked(1))
+					{
+						ImGui::OpenPopup("file_popup");
+					}
+
+					if (ImGui::BeginPopup("file_popup"))
+					{
+						ImGui::MenuItem(file, NULL, false, false);
+
+						if (ImGui::MenuItem("Rename"))
+						{
+
+						}
+
+						if (ImGui::MenuItem("Delete"))
+						{
+
+						}
+
+						ImGui::EndPopup();
+					}
+
+					if (ImGui::BeginDragDropSource())
+					{
+						ImGui::SetDragDropPayload("sa", NULL, NULL);
+						ImGui::Text(file);
+
+						ImGui::EndDragDropSource();
+					}
+					if (ImGui::BeginDragDropTarget())
+					{
+						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("sa"))
+						{
+
+						}
+
+						ImGui::EndDragDropTarget();
+					}
+
+					ImGui::PopID();
+
+					ImGui::NextColumn();
+				}
+				ImGui::Columns(1);
 				ImGui::TreePop();
 			}
 
@@ -182,12 +253,7 @@ namespace Perhaps
 		{
 			ImGui::End();
 		}
-
-		if (ImGui::Begin("Console"))
-		{
-			ImGui::End();
-		}
-
+		*/
 		/* ^^^ End rendering app ^^^ */
 		ImGui::End();
 

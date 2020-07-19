@@ -4,8 +4,6 @@
 #include "VertexArray.h"
 #include "Shader.h"
 
-#include "../EventSystem/EngineEvents.h"
-
 namespace Perhaps
 {
 

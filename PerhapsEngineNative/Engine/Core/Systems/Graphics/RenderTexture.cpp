@@ -1,4 +1,5 @@
 #include "RenderTexture.h"
+#include "Graphics.h"
 
 namespace Perhaps
 {

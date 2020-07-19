@@ -6,8 +6,6 @@
 
 namespace Perhaps
 {
-	class Graphics;
-
 	class RenderTexture
 	{
 	public:

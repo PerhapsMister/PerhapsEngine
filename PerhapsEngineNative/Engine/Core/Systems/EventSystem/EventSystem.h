@@ -34,9 +34,9 @@ namespace Perhaps
 		/// <param name="descriptor"></param>
 		/// <param name="function"></param>
 		/// <returns>event listen ID</returns>
-		static int Subscribe(Event::DescriptorType descriptor, SlotType&& function)
+		static size_t Subscribe(Event::DescriptorType descriptor, SlotType&& function)
 		{
-			int id = ++idReel;
+			size_t id = ++idReel;
 			StoredFunction* f = new StoredFunction();
 			f->descriptor = descriptor;
 			f->slot = function;
@@ -49,7 +49,7 @@ namespace Perhaps
 		}
 
 
-		static void UnSubscribe(int id)
+		static void UnSubscribe(size_t id)
 		{
 			if (idToFun.find(id) == idToFun.end())
 			{
@@ -103,8 +103,8 @@ namespace Perhaps
 
 	private:
 		static std::map<Event::DescriptorType, std::vector<StoredFunction*>> observers;
-		static std::map<int, StoredFunction*> idToFun;
-		static int idReel;
+		static std::map<size_t, StoredFunction*> idToFun;
+		static size_t idReel;
 	};
 
 }

@@ -1,2 +1,2 @@
 # PerhapsEngine
-toying around w/ c++ and opengl
+A Game Engine side project.

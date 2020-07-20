@@ -86,5 +86,30 @@ namespace Perhaps.Engine
             PImage(texture.GetNativeObject(), ref size, ref uv0, ref uv1);
         }
 
+        [DllImport("__Internal", EntryPoint = "PGetWindowSize")]
+        static extern void PGetWindowSize(out Vector2 size);
+
+        public static Vector2 GetWindowSize()
+        {
+            PGetWindowSize(out Vector2 size);
+            return size;
+        }
+
+
+        [DllImport("__Internal", EntryPoint = "PIsWindowDocked")]
+        public static extern bool IsWindowDocked();
+        [DllImport("__Internal", EntryPoint = "PButton")]
+        public static extern bool Button(string name);
+        [DllImport("__Internal", EntryPoint = "PSameLine")]
+        public static extern void SameLine();
+
+        [DllImport("__Internal", EntryPoint = "PSetWindowSize")]
+        public static extern void SetWindowSize(Vector2 size);
+        [DllImport("__Internal", EntryPoint = "PBeginGroup")]
+        public static extern void BeginGroup();
+        [DllImport("__Internal", EntryPoint = "PEndGroup")]
+        public static extern void EndGroup();
+
+
     }
 }

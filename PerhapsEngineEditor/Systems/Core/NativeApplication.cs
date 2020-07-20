@@ -1,5 +1,6 @@
 ﻿using Perhaps.Engine;
 using System;
+using System.Runtime.InteropServices;
 
 namespace Perhaps.EngineEditor
 {
@@ -11,6 +12,9 @@ namespace Perhaps.EngineEditor
         public NativeApplication(IntPtr app)
         {
             mNativeObject = app;
+
+            IntPtr windowPtr = App_GetWindow(app);
+            window = new Window(windowPtr);
         }
 
         public IntPtr GetNativeObject()
@@ -18,5 +22,7 @@ namespace Perhaps.EngineEditor
             return mNativeObject;
         }
 
+        [DllImport("__Internal", EntryPoint = "App_GetWindow")]
+        public static extern IntPtr App_GetWindow(IntPtr app);
     }
 }

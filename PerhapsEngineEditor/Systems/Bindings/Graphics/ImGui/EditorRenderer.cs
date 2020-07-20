@@ -4,9 +4,9 @@ using System.Numerics;
 
 namespace Perhaps.Engine
 {
-	/// <summary>
-	/// In charge of rendering the editor.
-	/// </summary>
+    /// <summary>
+    /// In charge of rendering the editor.
+    /// </summary>
     public class EditorRenderer
     {
         RenderTexture rt;
@@ -16,53 +16,80 @@ namespace Perhaps.Engine
             rt = new RenderTexture(nativeRenderTexture);
         }
 
-		bool showScene = true;
-		bool buildWindow = false;
+        bool showScene = true;
+        bool buildWindow = false;
 
-		public void Render()
+        public void Render()
         {
-			if (ImGui.BeginMenuBar())
-			{
-				if (ImGui.BeginMenu("Windows"))
-				{
-					if (ImGui.MenuItem("Scene Window"))
-					{
-						showScene = !showScene;
-					}
+            if (ImGui.BeginMenuBar())
+            {
+                if (ImGui.BeginMenu("Windows"))
+                {
+                    if (ImGui.MenuItem("Scene Window"))
+                    {
+                        showScene = !showScene;
+                    }
 
 
-					ImGui.EndMenu();
-				}
+                    ImGui.EndMenu();
+                }
 
-				ImGui.EndMenuBar();
-			}
+                ImGui.EndMenuBar();
+            }
 
-			if (showScene)
-			{
-				ImGuiWindowFlags flags = ImGuiWindowFlags.ImGuiWindowFlags_None;
-				flags |= ImGuiWindowFlags.ImGuiWindowFlags_NoCollapse;
+            if (showScene)
+            {
+                RenderSceneWindow();
+            }
+        }
 
-				if (ImGui.Begin("Show Scene", ref showScene, flags))
-				{
-					ImGui.BeginChild("Game Render");
-					ImGui.EndChild();
+        void RenderSceneWindow()
+        {
+            ImGuiWindowFlags flags = ImGuiWindowFlags.ImGuiWindowFlags_None;
+            flags |= ImGuiWindowFlags.ImGuiWindowFlags_NoCollapse;
 
-					/*
-						if (ImGui.BeginChild("Game Render"))
-						{
-							ImVec2 wsize = ImGui::GetWindowSize();
+            if (ImGui.Begin("Show Scene", ref showScene, flags))
+            {
+                bool docked = ImGui.IsWindowDocked();
+                ImGui.BeginGroup();
 
-							ImGui::Image((ImTextureID)gameRender.GetColorAttachment()->GetId(), wsize, ImVec2(0, 1), ImVec2(1, 0));
-							ImGui::EndChild();
-						}
-						*/
-					ImGui.End();
-				}
-			}
-		}
+                if (ImGui.Button("Enter Play Mode"))
+                {
+					
+                }
+                ImGui.SameLine();
+
+                if (!docked && ImGui.Button("Resize To Aspect"))
+                {
+                    Vector2 rtDims = rt.colorAttachment.GetDimensions();
+                    float aspect = rtDims.X / rtDims.Y;
+                    Vector2 windowSize = ImGui.GetWindowSize();
+
+                    if (windowSize.X > windowSize.Y)
+                    {
+                        windowSize.Y = windowSize.X / aspect;
+                    }
+                    else
+                    {
+                        windowSize.X = windowSize.Y * aspect;
+                    }
+
+                    ImGui.SetWindowSize(windowSize);
+                }
+                ImGui.EndGroup();
 
 
-		/*
+                ImGui.BeginChild("Game Render");
+                Vector2 size = ImGui.GetWindowSize();
+                ImGui.Image(rt.colorAttachment, size, new Vector2(0, 1), new Vector2(1, 0));
+
+                ImGui.EndChild();
+                ImGui.End();
+            }
+        }
+
+
+        /*
          static bool styleEditor = false;
 		static bool showScene = true;
 
@@ -93,54 +120,6 @@ namespace Perhaps.Engine
 			ImGui::EndMenuBar();
 		}
 
-		if (showScene)
-		{
-			static ImGuiWindowFlags sceneWindowFlags = ImGuiDockNodeFlags_None;
-			sceneWindowFlags |= ImGuiWindowFlags_NoCollapse;
-
-			static bool showScene = true;
-			if (ImGui::Begin("Game  Scene", &showScene, sceneWindowFlags))
-			{
-				bool docked = ImGui::IsWindowDocked();
-				ImGui::BeginGroup();
-
-				if (ImGui::Button("Enter Play Mode"))
-				{
-
-				}
-
-				ImGui::SameLine();
-
-				if (!docked && ImGui::Button("Resize to aspect"))
-				{
-					glm::vec2 dimensions = gameRender.GetDimensions();
-					float aspect = dimensions.x / dimensions.y;
-					ImVec2 wsize = ImGui::GetWindowSize();
-					if (wsize.x > wsize.y)
-					{
-						wsize.y = wsize.x / aspect;
-					}
-					else
-					{
-						wsize.x = wsize.y * aspect;
-					}
-
-					ImGui::SetWindowSize(wsize);
-				}
-
-				ImGui::EndGroup();
-
-				if (ImGui::BeginChild("Game Render"))
-				{
-					ImVec2 wsize = ImGui::GetWindowSize();
-
-					ImGui::Image((ImTextureID)gameRender.GetColorAttachment()->GetId(), wsize, ImVec2(0, 1), ImVec2(1, 0));
-					ImGui::EndChild();
-				}
-
-				ImGui::End();
-			}
-		}
 
 		if (styleEditor && ImGui::Begin("Editor Styles"))
 		{
@@ -242,7 +221,7 @@ namespace Perhaps.Engine
 		} 
          
          */
-	}
+    }
 
 
 }

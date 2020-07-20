@@ -24,6 +24,8 @@ namespace Perhaps
 		void Begin();
 		Application() {}
 	};
+
+	PAPI Window* App_GetWindow(Application* app);
 }
 
 #endif

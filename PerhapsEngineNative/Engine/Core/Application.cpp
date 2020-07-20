@@ -58,4 +58,9 @@ namespace Perhaps
 	{
 		return mainWindow;
 	}
+
+	Window* App_GetWindow(Application* app)
+	{
+		return app->GetWindow();
+	}
 }

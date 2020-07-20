@@ -14,8 +14,13 @@ namespace Perhaps.Engine
         public static MonoApplication instance { get; private set; }
         public NativeApplication nativeApp { get; private set; }
 
+        public MonoApplication(IntPtr nativeApp)
+        {
+            Initialize(nativeApp);
+        }
 
-        public void Initialize(IntPtr nativeAppPtr)
+
+        void Initialize(IntPtr nativeAppPtr)
         {
             Console.WriteLine($"C# dll initialized. Domain: {AppDomain.CurrentDomain.FriendlyName} " +
 $"Version: {typeof(string).Assembly.ImageRuntimeVersion}");
@@ -25,7 +30,6 @@ $"Version: {typeof(string).Assembly.ImageRuntimeVersion}");
                 Debug.Assert(instance == null, "MonoApplication instance is not null! only 1 MonoApplication may exist.");
 
                 nativeApp = new NativeApplication(nativeAppPtr);
-                //window = new Window(windowPtr);
                 instance = this;
 
                 OnInitialize();

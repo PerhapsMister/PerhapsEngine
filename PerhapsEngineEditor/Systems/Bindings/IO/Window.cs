@@ -18,8 +18,14 @@ namespace Perhaps.Engine
             return mNativeObject;
         }
 
+        public Vector2 GetDimensions()
+        {
+            Window_GetDimensions(mNativeObject, out Vector2 dimensions);
+            return dimensions;
+        }
+
 
         [DllImport("__Internal", EntryPoint = "Window_GetDimensions")]
-        static extern Vector2 Window_GetDimensions(IntPtr window);
+        static extern void Window_GetDimensions(IntPtr window, out Vector2 dimensions);
     }
 }

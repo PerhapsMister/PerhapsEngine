@@ -9,6 +9,11 @@ namespace Perhaps.Engine.Editor
 {
     public class EditorApplication : MonoApplication
     {
+        public EditorApplication(IntPtr nativeApp) : base(nativeApp)
+        {
+            
+        }
+
         public override void OnInitialize()
         {
             

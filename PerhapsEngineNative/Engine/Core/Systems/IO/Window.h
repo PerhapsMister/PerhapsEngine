@@ -1,8 +1,6 @@
 #ifndef PERHAPS_WINDOW
 #define PERHAPS_WINDOW
 #include "../../PerhapsPch.h"
-#include "../EventSystem/EventSystem.h"
-#include "../EventSystem/EngineEvents.h"
 
 namespace Perhaps
 {
@@ -10,13 +8,7 @@ namespace Perhaps
 	{
 	public:
 
-		static Window* CreateWindow(int startWidth, int startHeight, const char* title)
-		{
-			Window* window = new Window(startWidth, startHeight, title);
-			activeWindows.insert(std::make_pair(window->glfwWindow, window));
-
-			return window;
-		}
+		static Window* CreateWindow(int startWidth, int startHeight, const char* title);
 
 		bool WindowCloseRequested();
 		void PollEvents();
@@ -36,30 +28,11 @@ namespace Perhaps
 		~Window();
 		void InitializeGlfw();
 
-		static void OnResize(GLFWwindow* glfwWindow, int width, int height)
-		{
-			Window* window = activeWindows[glfwWindow];
-
-			window->mWidth = width;
-			window->mHeight = height;
-
-			ResizeEvent e;
-			e.newSize = window->GetDimensions();
-			e.window = window;
-
-			EventDispatcher::DispatchEvent(e);
-		}
-
-		static void Error_Callback(int error, const char* description)
-		{
-			conlog("GLFW Error code: " << error << " Reason: " << description);
-		}
+		static void OnResize(GLFWwindow* glfwWindow, int width, int height);
+		static void Error_Callback(int error, const char* description);
 	};
 
-	PAPI glm::vec2 Window_GetDimensions(Window* window)
-	{
-		return window->GetDimensions();
-	}
+	PAPI void Window_GetDimensions(Window* window, glm::vec2* dims);
 }
 
 #endif

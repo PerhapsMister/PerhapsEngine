@@ -1,7 +1,17 @@
 #include "Window.h"
+#include "../EventSystem/EventSystem.h"
+#include "../EventSystem/EngineEvents.h"
 
 namespace Perhaps
 {
+	Window* Window::CreateWindow(int startWidth, int startHeight, const char* title)
+	{
+		Window* window = new Window(startWidth, startHeight, title);
+		activeWindows.insert(std::make_pair(window->glfwWindow, window));
+
+		return window;
+	}
+
 	Window::Window(int width, int height, const char* title) : mWidth(width), mHeight(height)
 	{
 		if (!glfwInitialized)
@@ -55,6 +65,25 @@ namespace Perhaps
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	}
 
+	void Window::OnResize(GLFWwindow* glfwWindow, int width, int height)
+	{
+		Window* window = activeWindows[glfwWindow];
+
+		window->mWidth = width;
+		window->mHeight = height;
+
+		ResizeEvent e;
+		e.newSize = window->GetDimensions();
+		e.window = window;
+
+		EventDispatcher::DispatchEvent(e);
+	}
+
+	void Window::Error_Callback(int error, const char* description)
+	{
+		conlog("GLFW Error code: " << error << " Reason: " << description);
+	}
+
 	bool Window::WindowCloseRequested()
 	{
 		return glfwWindowShouldClose(glfwWindow);
@@ -73,6 +102,11 @@ namespace Perhaps
 	glm::vec2 Window::GetDimensions()
 	{
 		return glm::vec2(mWidth, mHeight);
+	}
+
+	void Window_GetDimensions(Window* window, glm::vec2* dims)
+	{
+		*dims = window->GetDimensions();
 	}
 
 	std::map<GLFWwindow*, Window*> Window::activeWindows;

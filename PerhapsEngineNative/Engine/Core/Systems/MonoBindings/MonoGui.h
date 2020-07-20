@@ -110,6 +110,10 @@ namespace Perhaps
 	{
 		ImGui::PushID(id);
 	}
+	PAPI void PPushId_str(const char* id)
+	{
+		ImGui::PushID(id);
+	}
 	PAPI void PPopId()
 	{
 		ImGui::PopID();
@@ -183,6 +187,31 @@ namespace Perhaps
 	PAPI bool PInputText(const char* label, char* inputText, int length)
 	{
 		return ImGui::InputText(label, inputText, length);
+	}
+
+	PAPI void PPushItemWidth(float width)
+	{
+		ImGui::PushItemWidth(width);
+	}
+
+	PAPI void PPopItemWidth()
+	{
+		ImGui::PopItemWidth();
+	}
+
+	PAPI void PBullet()
+	{
+		ImGui::Bullet();
+	}
+
+	PAPI void PBulletText(const char* text)
+	{
+		ImGui::BulletText(text);
+	}
+
+	PAPI void PSeparator()
+	{
+		ImGui::Separator();
 	}
 }
 

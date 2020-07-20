@@ -16,7 +16,7 @@ namespace Perhaps.Engine.Editor
 
         public override void OnInitialize()
         {
-            
+            EditorActions.Initialize();   
         }
 
         public override void ShutDown()

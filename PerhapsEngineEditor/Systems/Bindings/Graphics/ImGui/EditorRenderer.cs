@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Collections.Generic;
 
 namespace Perhaps.Engine
 {
@@ -16,8 +17,10 @@ namespace Perhaps.Engine
             rt = new RenderTexture(nativeRenderTexture);
         }
 
-        bool showScene = true;
-        bool buildWindow = false;
+        bool sceneWindow = true;
+        bool filesystemWindow = true;
+        bool inspectorWindow = true;
+        bool sceneGraphWindow = true;
 
         public void Render()
         {
@@ -27,7 +30,22 @@ namespace Perhaps.Engine
                 {
                     if (ImGui.MenuItem("Scene Window"))
                     {
-                        showScene = !showScene;
+                        sceneWindow = !sceneWindow;
+                    }
+
+                    if (ImGui.MenuItem("FileSystem window"))
+                    {
+                        filesystemWindow = !filesystemWindow;
+                    }
+
+                    if (ImGui.MenuItem("SceneGraph Window"))
+                    {
+                        sceneGraphWindow = !sceneGraphWindow;
+                    }
+
+                    if (ImGui.MenuItem("Inspector Window"))
+                    {
+                        inspectorWindow = !inspectorWindow;
                     }
 
 
@@ -37,10 +55,19 @@ namespace Perhaps.Engine
                 ImGui.EndMenuBar();
             }
 
-            if (showScene)
-            {
+            
+            if (filesystemWindow)
+                RenderFilesystemWindow();
+                
+            if (sceneGraphWindow)
+                RenderSceneGraph();
+
+            if (sceneWindow)
                 RenderSceneWindow();
-            }
+
+            //Inspector should always render last
+            if (inspectorWindow)
+                RenderInspectorWindow();
         }
 
         void RenderSceneWindow()
@@ -48,179 +75,150 @@ namespace Perhaps.Engine
             ImGuiWindowFlags flags = ImGuiWindowFlags.ImGuiWindowFlags_None;
             flags |= ImGuiWindowFlags.ImGuiWindowFlags_NoCollapse;
 
-            if (ImGui.Begin("Show Scene", ref showScene, flags))
+            ImGui.Begin("Show Scene", ref sceneWindow, flags);
+            ImGui.BeginGroup();
+
+            if (ImGui.Button("Enter Play Mode"))
             {
-                bool docked = ImGui.IsWindowDocked();
-                ImGui.BeginGroup();
 
-                if (ImGui.Button("Enter Play Mode"))
-                {
-					
-                }
-                ImGui.SameLine();
-
-                if (!docked && ImGui.Button("Resize To Aspect"))
-                {
-                    Vector2 rtDims = rt.colorAttachment.GetDimensions();
-                    float aspect = rtDims.X / rtDims.Y;
-                    Vector2 windowSize = ImGui.GetWindowSize();
-
-                    if (windowSize.X > windowSize.Y)
-                    {
-                        windowSize.Y = windowSize.X / aspect;
-                    }
-                    else
-                    {
-                        windowSize.X = windowSize.Y * aspect;
-                    }
-
-                    ImGui.SetWindowSize(windowSize);
-                }
-                ImGui.EndGroup();
-
-
-                ImGui.BeginChild("Game Render");
-                Vector2 size = ImGui.GetWindowSize();
-                ImGui.Image(rt.colorAttachment, size, new Vector2(0, 1), new Vector2(1, 0));
-
-                ImGui.EndChild();
-                ImGui.End();
             }
+            ImGui.SameLine();
+
+            bool docked = ImGui.IsWindowDocked();
+            if (!docked && ImGui.Button("Resize To Aspect"))
+            {
+                Vector2 rtDims = rt.colorAttachment.GetDimensions();
+                float aspect = rtDims.X / rtDims.Y;
+                Vector2 windowSize = ImGui.GetWindowSize();
+
+                if (windowSize.X > windowSize.Y)
+                {
+                    windowSize.Y = windowSize.X / aspect;
+                }
+                else
+                {
+                    windowSize.X = windowSize.Y * aspect;
+                }
+
+                ImGui.SetWindowSize(windowSize);
+            }
+            ImGui.EndGroup();
+
+            ImGui.BeginChild("Game Render");
+
+            Vector2 size = ImGui.GetWindowSize();
+            ImGui.Image(rt.colorAttachment, size, new Vector2(0, 1), new Vector2(1, 0));
+            ImGui.EndChild();
+
+            ImGui.End();
         }
 
+        class FooData
+        {
+            
+        }
 
-        /*
-         static bool styleEditor = false;
-		static bool showScene = true;
-
-		static bool buildWindow = false;
-		if (ImGui::BeginMenuBar())
-		{
-
-			if (ImGui::BeginMenu("Windows"))
-			{
-				if (ImGui::MenuItem("Style Editor"))
-				{
-					styleEditor = !styleEditor;
-				}
-
-				if (ImGui::MenuItem("Scene Window"))
-				{
-					showScene = !showScene;
-				}
-
-				if (ImGui::MenuItem("Build Window"))
-				{
-					buildWindow = !buildWindow;
-				}
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMenuBar();
-		}
+        string currentDir = "D:\\Dev\\Dev\\PerhapsEngine\\PerhapsEngineNative\\Build-Debug-Bin";
+        int selectedIndex = -1;
+        void RenderFilesystemWindow()
+        {
+            ImGui.Begin("FileSystem", ref filesystemWindow);
+            //ImGui.Text(currentDir);
+            if(ImGui.InputText("sa", ref currentDir))
+            {
+                Console.WriteLine(currentDir);
+            }
 
 
-		if (styleEditor && ImGui::Begin("Editor Styles"))
-		{
-			ImGui::ShowStyleEditor();
-			ImGui::End();
-		}
+            const int max_columns = 2;
+            List<string> files = new List<string>()
+            {
+                    "hello.h",
+                    "hello.cpp",
+                    "vertex.shader",
+                    "fragment.shader",
+                    "shrek.png"
+            };
+
+            if(ImGui.TreeNode("FileSystem"))
+            {
+                ImGui.Columns(max_columns);
 
 
-		if (ImGui::Begin("FileSystem"))
-		{
-			std::string root = "D:\\Dev\\Dev\\PerhapsEngine\\PerhapsEngineNative\\Build-Debug-Bin";
-			ImGui::Text(root.c_str());
+                for (int i = 0; i < files.Count; i++)
+                {
+                    ImGui.PushId(i);
+                    if (ImGui.Selectable(files[i], selectedIndex == i))
+                    {
+                        
+                        selectedIndex = i;
+                        ImGui.CloseCurrentPopup();
+                    }
 
-			if (ImGui::TreeNode("File view"))
-			{
-				const int max_columns = 2;
+                    if (ImGui.IsItemClicked(1))
+                    {
+                        ImGui.OpenPopup("file_popup");
+                    }
 
-				std::vector<std::string> files =
-				{
-					"hello.h",
-					"hello.cpp",
-					"vertex.shader",
-					"fragment.shader",
-					"shrek.png"
-				};
-				static int selectedIndex = -1;
+                    if (ImGui.BeginPopup("file_popup"))
+                    {
+                        ImGui.MenuItem(files[i]);
+                        if (ImGui.MenuItem("Rename"))
+                        {
 
-				ImGui::Columns(max_columns, NULL, true);
-				for (size_t i = 0; i < files.size(); i++)
-				{
+                        }
 
-					ImGui::PushID(i);
+                        if (ImGui.MenuItem("Delete"))
+                        {
 
-					const char* file = files[i].c_str();
-					if (ImGui::Selectable(file, selectedIndex == i))
-					{
-						selectedIndex = i;
-						ImGui::CloseCurrentPopup();
-					}
+                        }
 
-					if (ImGui::IsItemClicked(1))
-					{
-						ImGui::OpenPopup("file_popup");
-					}
+                        ImGui.EndPopup();
+                    }
 
-					if (ImGui::BeginPopup("file_popup"))
-					{
-						ImGui::MenuItem(file, NULL, false, false);
+                    if (ImGui.BeginDragSource())
+                    {
+                        ImGui.SetDragAndDropPayload("file", files[i]);
+                        ImGui.Text(files[i]);
+                        ImGui.EndDragAndDropSource();
+                    }
+                    if (ImGui.BeginDragAndDropTarget())
+                    {
 
-						if (ImGui::MenuItem("Rename"))
-						{
+                        if (ImGui.AcceptDragAndDropPayload("file", out object payload))
+                        {
+                            Console.WriteLine($"Dropped {(string)payload} on {files[i]}");
+                        }
 
-						}
+                        ImGui.EndDragAndDropTarget();
+                    }
 
-						if (ImGui::MenuItem("Delete"))
-						{
+                    ImGui.PopId();
+                    ImGui.NextColumn();
+                }
 
-						}
+                ImGui.Columns(1);
 
-						ImGui::EndPopup();
-					}
+                ImGui.TreePop();
+            }
 
-					if (ImGui::BeginDragDropSource())
-					{
-						ImGui::SetDragDropPayload("sa", NULL, NULL);
-						ImGui::Text(file);
+            ImGui.End();
+        }
 
-						ImGui::EndDragDropSource();
-					}
-					if (ImGui::BeginDragDropTarget())
-					{
-						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("sa"))
-						{
+        void RenderInspectorWindow()
+        {
+            ImGui.Begin("Inspector", ref inspectorWindow);
 
-						}
 
-						ImGui::EndDragDropTarget();
-					}
+            ImGui.End();
+        }
 
-					ImGui::PopID();
+        void RenderSceneGraph()
+        {
+            ImGui.Begin("Scene Graph", ref sceneGraphWindow);
 
-					ImGui::NextColumn();
-				}
-				ImGui::Columns(1);
-				ImGui::TreePop();
-			}
-
-			ImGui::End();
-		}
-
-		if (ImGui::Begin("Scene Hierarchy"))
-		{
-			ImGui::End();
-		}
-
-		if (ImGui::Begin("Inspector"))
-		{
-			ImGui::End();
-		} 
-         
-         */
+            ImGui.End();
+        }
     }
 
 

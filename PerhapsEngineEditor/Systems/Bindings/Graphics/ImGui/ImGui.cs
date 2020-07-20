@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Numerics;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Perhaps.Engine
 {
@@ -110,6 +112,113 @@ namespace Perhaps.Engine
         [DllImport("__Internal", EntryPoint = "PEndGroup")]
         public static extern void EndGroup();
 
+        [DllImport("__Internal", EntryPoint = "PText")]
+        public static extern void Text(string text);
+        [DllImport("__Internal", EntryPoint = "PTreeNode")]
+        public static extern bool TreeNode(string name);
+        [DllImport("__Internal", EntryPoint = "PTreePop")]
+        public static extern void TreePop();
+
+
+
+        [DllImport("__Internal", EntryPoint = "PColumns")]
+        public static extern void Columns(int count, string id = null);
+        [DllImport("__Internal", EntryPoint = "PPushId")]
+        public static extern void PushId(int id);
+        [DllImport("__Internal", EntryPoint = "PPopId")]
+        public static extern void PopId();
+        [DllImport("__Internal", EntryPoint = "PSelectable")]
+        public static extern bool Selectable(string name, ref bool selected);
+        [DllImport("__Internal", EntryPoint = "PSelectable_NotRef")]
+        static extern bool PSelectable_NotRef(string name, bool selected);
+        public static bool Selectable(string name, bool selected)
+        {
+            return PSelectable_NotRef(name, selected);
+        }
+        [DllImport("__Internal", EntryPoint = "PIsItemClicked")]
+        public static extern bool IsItemClicked(int mouseButton);
+
+        [DllImport("__Internal", EntryPoint = "POpenPopup")]
+        public static extern void OpenPopup(string id);
+
+        [DllImport("__Internal", EntryPoint = "PCloseCurrentPopup")]
+        public static extern void CloseCurrentPopup();
+
+        [DllImport("__Internal", EntryPoint = "PBeginPopup")]
+        public static extern bool BeginPopup(string id, ImGuiWindowFlags flags = 0);
+
+        [DllImport("__Internal", EntryPoint = "PEndPopup")]
+        public static extern void EndPopup();
+        [DllImport("__Internal", EntryPoint = "PBeginDragSource")]
+        public static extern bool BeginDragSource();
+        [DllImport("__Internal", EntryPoint = "PEndDragAndDropSource")]
+        public static extern void EndDragAndDropSource();
+        [DllImport("__Internal", EntryPoint = "PBeginDragAndDropTarget")]
+        public static extern bool BeginDragAndDropTarget();
+        [DllImport("__Internal", EntryPoint = "PEndDragAndDropTarget")]
+        public static extern void EndDragAndDropTarget();
+        [DllImport("__Internal", EntryPoint = "PNextColumn")]
+        public static extern void NextColumn();
+
+
+
+        [DllImport("__Internal", EntryPoint = "PSetDragAndDropPayload")]
+        public static extern bool PSetDragAndDropPayload(string id, int payloadData);
+
+
+        static Dictionary<int, object> dataStorage = new Dictionary<int, object>();
+        public static bool SetDragAndDropPayload(string id, object payloadData = null)
+        {
+            int payloadId = -1;
+            if (payloadData != null)
+            {
+                payloadId = payloadData.GetHashCode();
+                if (!dataStorage.ContainsKey(payloadId))
+                    dataStorage.Add(payloadId, null);
+
+                dataStorage[payloadId] = payloadData;
+            }
+
+            return PSetDragAndDropPayload(id, payloadId);
+        }
+
+        [DllImport("__Internal", EntryPoint = "PAcceptDragAndDropPayload")]
+        static extern bool PAcceptDragAndDropPayload(string id, ref int dataId);
+
+        public static bool AcceptDragAndDropPayload(string id, out object payloadData)
+        {
+            int dataId = 0;
+            payloadData = null;
+            bool val = PAcceptDragAndDropPayload(id, ref dataId);
+            if (val && dataId != 0)
+            {
+                if (dataStorage.ContainsKey(dataId))
+                {
+                    payloadData = dataStorage[dataId];
+                    dataStorage.Remove(dataId);
+                }
+            }
+
+            return val;
+        }
+
+
+        [DllImport("__Internal", EntryPoint = "PInputText")]
+        public static extern bool PInputText(string label, StringBuilder text, int length);
+
+        const int max_chars = 512;
+        static StringBuilder buffer = new StringBuilder(max_chars);
+        public static bool InputText(string label, ref string inputText)
+        {
+            buffer.Clear();
+            buffer.Append(inputText);
+
+            bool val = PInputText(label, buffer, buffer.Capacity);
+            inputText = buffer.ToString();
+
+            return val;
+
+        }
 
     }
 }

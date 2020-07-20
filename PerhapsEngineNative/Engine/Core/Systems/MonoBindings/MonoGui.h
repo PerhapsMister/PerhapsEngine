@@ -48,7 +48,7 @@ namespace Perhaps
 	{
 		ImGui::Image((ImTextureID)tex->GetId(), ImVec2(size.x, size.y), ImVec2(uv0.x, uv0.y), ImVec2(uv1.x, uv1.y));
 	}
-	
+
 
 	PAPI void PGetWindowSize(glm::vec2* dims)
 	{
@@ -86,6 +86,103 @@ namespace Perhaps
 	PAPI void PEndGroup()
 	{
 		ImGui::EndGroup();
+	}
+
+	PAPI void PText(const char* text)
+	{
+		ImGui::Text(text);
+	}
+
+	PAPI bool PTreeNode(const char* name)
+	{
+		return ImGui::TreeNode(name);
+	}
+	PAPI void PTreePop()
+	{
+		ImGui::TreePop();
+	}
+
+	PAPI void PColumns(int count, const char* id)
+	{
+		ImGui::Columns(count, id);
+	}
+	PAPI void PPushId(int id)
+	{
+		ImGui::PushID(id);
+	}
+	PAPI void PPopId()
+	{
+		ImGui::PopID();
+	}
+	PAPI void PSelectable(const char* name, bool* selected)
+	{
+		ImGui::Selectable(name, selected);
+	}
+	PAPI void PSelectable_NotRef(const char* name, bool selected)
+	{
+		ImGui::Selectable(name, selected);
+	}
+	PAPI bool PIsItemClicked(int mouseButton)
+	{
+		return ImGui::IsItemClicked(mouseButton);
+	}
+	PAPI void POpenPopup(const char* id)
+	{
+		ImGui::OpenPopup(id);
+	}
+	PAPI void PCloseCurrentPopup()
+	{
+		ImGui::CloseCurrentPopup();
+	}
+	PAPI void PBeginPopup(const char* id, ImGuiWindowFlags flags)
+	{
+		ImGui::BeginPopup(id, flags);
+	}
+	PAPI void PEndPopup()
+	{
+		ImGui::EndPopup();
+	}
+	PAPI void PBeginDragSource()
+	{
+		ImGui::BeginDragDropSource();
+	}
+	PAPI void PEndDragAndDropSource()
+	{
+		ImGui::EndDragDropSource();
+	}
+	PAPI bool PBeginDragAndDropTarget()
+	{
+		return ImGui::BeginDragDropTarget();
+	}
+
+	PAPI void PSetDragAndDropPayload(const char* id, int dataId)
+	{
+		ImGui::SetDragDropPayload(id, &dataId, sizeof(int));
+	}
+
+	PAPI bool PAcceptDragAndDropPayload(const char* id, int* dataId)
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(id))
+		{
+			*dataId = *(int*)payload->Data;
+			return true;
+		}
+
+		*dataId = 0;
+		return false;
+	}
+	PAPI void PEndDragAndDropTarget()
+	{
+		ImGui::EndDragDropTarget();
+	}
+	PAPI void PNextColumn()
+	{
+		ImGui::NextColumn();
+	}
+
+	PAPI bool PInputText(const char* label, char* inputText, int length)
+	{
+		return ImGui::InputText(label, inputText, length);
 	}
 }
 

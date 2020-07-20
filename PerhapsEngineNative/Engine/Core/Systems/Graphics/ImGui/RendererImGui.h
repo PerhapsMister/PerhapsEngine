@@ -13,6 +13,9 @@ namespace Perhaps
 		void Initialize();
 		void Render(RenderTexture& rt);
 		void Cleanup();
+
+		private:
+		void SetupDockspace(bool* p_open);
 	};
 
 }

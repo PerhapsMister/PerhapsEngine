@@ -32,12 +32,16 @@ namespace Perhaps.Engine.Editor
         EditorRenderer editorRenderer;
         public void OnEditorGuiRender(IntPtr sceneRenderTexture)
         {
-            if (editorRenderer == null)
+            EngineUtils.TryExecute(() =>
             {
-                editorRenderer = new EditorRenderer(sceneRenderTexture);
-            }
+                if (editorRenderer == null)
+                {
+                    editorRenderer = new EditorRenderer(sceneRenderTexture);
+                }
 
-            editorRenderer.Render();
+                editorRenderer.Render();
+
+            });
         }
     }
 }

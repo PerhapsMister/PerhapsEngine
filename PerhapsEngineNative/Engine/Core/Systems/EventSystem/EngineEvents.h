@@ -34,5 +34,21 @@ namespace Perhaps
 				return descriptor;
 			}
 	};
+
+	class KeyEvent : public Event
+	{
+		public:
+			GLFWwindow* window; 
+			int key;
+			int scancode;
+			int action;
+			int mods;
+
+			static constexpr const char* descriptor = "KeyPress";
+			virtual DescriptorType GetType() const
+			{
+				return descriptor;
+			}
+	};
 }
 #endif

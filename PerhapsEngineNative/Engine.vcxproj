@@ -191,6 +191,7 @@
     <ClInclude Include="Engine\Core\Systems\Graphics\RenderTexture.h" />
     <ClInclude Include="Engine\Core\Systems\Graphics\Texture2D.h" />
     <ClInclude Include="Engine\Core\Systems\Graphics\VertexArray.h" />
+    <ClInclude Include="Engine\Core\Systems\IO\KeyCodes.h" />
     <ClInclude Include="Engine\Core\Systems\MonoBindings\MonoGui.h" />
     <ClInclude Include="Engine\Core\Systems\MonoBindings\MonoHaps.h" />
     <ClInclude Include="Engine\Core\Systems\Assets\Assets.h" />

@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "KeyCodes.h"
 #include "../EventSystem/EventSystem.h"
 #include "../EventSystem/EngineEvents.h"
 
@@ -36,7 +37,30 @@ namespace Perhaps
 			conlog(ss.str());
 		}
 
+		glfwSetKeyCallback(glfwWindow, key_callback);
 		glfwSetFramebufferSizeCallback(glfwWindow, OnResize);
+
+		EventDispatcher::Subscribe(KeyEvent::descriptor, std::bind(&Window::OnKeyEvent, this, std::placeholders::_1));
+	}
+
+	void Window::OnKeyEvent(const Event& e)
+	{
+		const KeyEvent& keyEvent = (KeyEvent&)e;
+
+		if(keyEvent.action == GLFW_PRESS)
+			tappedKeys.insert(keyEvent.key);
+	}
+
+	void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		KeyEvent e;
+		e.window = window;
+		e.key = key;
+		e.scancode = scancode;
+		e.action = action;
+		e.mods = mods;
+
+		EventDispatcher::DispatchEvent(e);
 	}
 
 	Window::~Window()
@@ -84,6 +108,11 @@ namespace Perhaps
 		conlog("GLFW Error code: " << error << " Reason: " << description);
 	}
 
+	void Window::SetTitle(const char* title)
+	{
+		glfwSetWindowTitle(glfwWindow, title);
+	}
+
 	bool Window::WindowCloseRequested()
 	{
 		return glfwWindowShouldClose(glfwWindow);
@@ -96,6 +125,7 @@ namespace Perhaps
 
 	void Window::SwapBuffers()
 	{
+		tappedKeys.clear();
 		glfwSwapBuffers(glfwWindow);
 	}
 
@@ -104,9 +134,37 @@ namespace Perhaps
 		return glm::vec2(mWidth, mHeight);
 	}
 
+	bool Window_IsKeyDown(Window* window, KeyCode keycode)
+	{
+		return window->IsKeyDown(keycode);
+	}
+
+	bool Window_IsKeyTapped(Window* window, KeyCode key)
+	{
+		return window->IsKeyTapped(key);
+	}
+
 	void Window_GetDimensions(Window* window, glm::vec2* dims)
 	{
 		*dims = window->GetDimensions();
+	}
+
+	void Window_SetTitle(Window* window, const char* title)
+	{
+		window->SetTitle(title);
+	}
+
+	bool Window::IsKeyDown(const KeyCode& key)
+	{
+		int castedKey = (int)key;
+		int state = glfwGetKey(glfwWindow, castedKey);
+		return state == GLFW_PRESS;
+	}
+
+	bool Window::IsKeyTapped(const KeyCode& key)
+	{
+		int castedKey = (int)key;
+		return tappedKeys.find(castedKey) != tappedKeys.end();
 	}
 
 	std::map<GLFWwindow*, Window*> Window::activeWindows;

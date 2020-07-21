@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "FLbtGrWrF2fv4NfxYMBgufRCqiahJZeNa4aXzr7eptZfOBeOSD7LOr9Q10rh+oxZHGylOXFgNcFSG5MJtTGo5g==",
+  "dgSpecHash": "lR6jwP1wDjXGyxZJkPKzyyx4OFOjnD7MO3S0c7KSCMbYyjcKCya0JS1pXU4qju9edwFB+nDouXDcAbDnk2Fy8g==",
   "success": true,
   "projectFilePath": "D:\\Dev\\Dev\\PerhapsEngine\\PerhapsEngineEditor\\PerhapsEngineEditor.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\hppp1\\.nuget\\packages\\assimpnet\\5.0.0-beta1\\assimpnet.5.0.0-beta1.nupkg.sha512",
+    "C:\\Users\\hppp1\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\hppp1\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\hppp1\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",

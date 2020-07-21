@@ -9,6 +9,11 @@ namespace Perhaps
 	{
 		return ImGui::Begin(name, open, flags);
 	}
+	PAPI bool PBegin_NoRef(const char* name, ImGuiWindowFlags flags)
+	{
+		return ImGui::Begin(name, nullptr, flags);
+	}
+
 	PAPI void PEnd()
 	{
 		ImGui::End();
@@ -184,9 +189,9 @@ namespace Perhaps
 		ImGui::NextColumn();
 	}
 
-	PAPI bool PInputText(const char* label, char* inputText, int length)
+	PAPI bool PInputText(const char* label, char* inputText, int length, ImGuiInputTextFlags flags)
 	{
-		return ImGui::InputText(label, inputText, length);
+		return ImGui::InputText(label, inputText, length, flags);
 	}
 
 	PAPI void PPushItemWidth(float width)
@@ -212,6 +217,36 @@ namespace Perhaps
 	PAPI void PSeparator()
 	{
 		ImGui::Separator();
+	}
+
+	PAPI bool PIsMouseDoubleClicked(int mouseButton)
+	{
+		return ImGui::IsMouseDoubleClicked(mouseButton);
+	}
+
+	PAPI bool PIsKeyDown(ImGuiKey_ key)
+	{
+		return ImGui::IsKeyDown(key);
+	}
+
+	PAPI bool PIsKeyPressed(ImGuiKey_ key)
+	{
+		return ImGui::IsKeyPressed(key);
+	}
+
+	PAPI void PPushAllowKeyboardFocus(bool allowKeyboardFocus)
+	{	
+		ImGui::PushAllowKeyboardFocus(allowKeyboardFocus);
+	}
+
+	PAPI void PPopAllowKeyboardFocus()
+	{
+		ImGui::PopAllowKeyboardFocus();
+	}
+
+	PAPI void PSetKeyboardFocusHere()
+	{
+		ImGui::SetKeyboardFocusHere();
 	}
 }
 

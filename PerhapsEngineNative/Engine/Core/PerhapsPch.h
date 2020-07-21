@@ -33,6 +33,7 @@
 #include <filesystem>
 #include <exception>
 #include <array>
+#include <unordered_set>
 
 #define conlog(x) std::cout << x << "\n";
 typedef glm::vec4 Color;

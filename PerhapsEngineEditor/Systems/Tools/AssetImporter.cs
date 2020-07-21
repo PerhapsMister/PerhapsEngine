@@ -1,4 +1,3 @@
-using Assimp;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System;

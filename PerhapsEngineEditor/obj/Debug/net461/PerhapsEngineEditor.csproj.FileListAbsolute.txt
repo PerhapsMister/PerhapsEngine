@@ -1,14 +1,14 @@
 D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\bin\Debug\net461\PerhapsEngineEditor.dll
 D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\bin\Debug\net461\PerhapsEngineEditor.pdb
-D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\bin\Debug\net461\AssimpNet.dll
 D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\bin\Debug\net461\System.Buffers.dll
 D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\bin\Debug\net461\System.Memory.dll
 D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\bin\Debug\net461\System.Numerics.Vectors.dll
 D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\bin\Debug\net461\System.Runtime.CompilerServices.Unsafe.dll
 D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\obj\Debug\net461\PerhapsEngineEditor.AssemblyInfoInputs.cache
 D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\obj\Debug\net461\PerhapsEngineEditor.AssemblyInfo.cs
-D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\obj\Debug\net461\PerhapsEngineEditor.csproj.CoreCompileInputs.cache
 D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\obj\Debug\net461\PerhapsEngineEditor.csproj.CopyComplete
 D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\obj\Debug\net461\PerhapsEngineEditor.dll
 D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\obj\Debug\net461\PerhapsEngineEditor.pdb
 D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\obj\Debug\net461\PerhapsEngineEditor.csprojAssemblyReference.cache
+D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\bin\Debug\net461\Newtonsoft.Json.dll
+D:\Dev\Dev\PerhapsEngine\PerhapsEngineEditor\obj\Debug\net461\PerhapsEngineEditor.csproj.CoreCompileInputs.cache

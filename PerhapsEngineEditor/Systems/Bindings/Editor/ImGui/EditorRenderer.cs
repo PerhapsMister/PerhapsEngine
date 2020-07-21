@@ -7,6 +7,7 @@ using System.Linq;
 
 using System.Windows;
 using System.Windows.Forms;
+using Perhaps.Engine.Editor;
 
 namespace Perhaps.Engine
 {
@@ -27,13 +28,29 @@ namespace Perhaps.Engine
         bool filesystemWindow = true;
         bool inspectorWindow = true;
         bool sceneGraphWindow = true;
+        bool projectPanelWindow = true;
 
         public void Render()
         {
+            RenderProject();
+        }
+
+        void RenderProject()
+        {
+            if(MonoApplication.instance.nativeApp.window.IsKeyTapped(KeyCode.E))
+            {
+                Console.WriteLine(ProjectManager.PersistentDataPath);
+            }
+
             if (ImGui.BeginMenuBar())
             {
                 if (ImGui.BeginMenu("Windows"))
                 {
+                    if (ImGui.MenuItem("Project Window"))
+                    {
+                        projectPanelWindow = !projectPanelWindow;
+                    }
+
                     if (ImGui.MenuItem("Scene Window"))
                     {
                         sceneWindow = !sceneWindow;
@@ -61,6 +78,8 @@ namespace Perhaps.Engine
                 ImGui.EndMenuBar();
             }
 
+            if (projectPanelWindow)
+                RenderProjectWindow();
 
             if (filesystemWindow)
                 RenderFilesystemWindow();
@@ -74,6 +93,94 @@ namespace Perhaps.Engine
             //Inspector should always render last
             if (inspectorWindow)
                 RenderInspectorWindow();
+        }
+
+        const string defaultTitle = "A New Project";
+        string projectTitle = defaultTitle;
+        void RenderProjectWindow()
+        {
+            ImGui.Begin("Project",ref projectPanelWindow);
+            if(ProjectManager.CurrentProject == null)
+            {
+                RenderProjectLoadPanel();
+
+                if(ProjectManager.CurrentProject != null)
+                {
+                    fileSystemBrowsedDirectory = ProjectManager.CurrentProject.ProjectDirectory;
+                }
+            }
+            else
+            {
+                RenderOngoingProject();
+            }
+
+            ImGui.End();
+        }
+
+        void RenderProjectLoadPanel()
+        {
+            ImGui.BulletText("New projects must be placed in an empty directory.");
+
+            ImGui.Text("Project Title:");
+            ImGui.SameLine();
+            ImGui.InputText("##label", ref projectTitle);
+
+            if (ImGui.Button("Create New"))
+            {
+                string path = EditorActions.OpenFolderPathDialog();
+                if (path != null)
+                {
+                    if (!ProjectManager.CreateProject(path, projectTitle))
+                    {
+                        Console.WriteLine("ProjectManager error: " + ProjectManager.ErrorString);
+                    }
+
+                    projectTitle = defaultTitle;
+                }
+            }
+
+            ImGui.Separator();
+            if (ImGui.Button("Load Existing"))
+            {
+                string path = EditorActions.OpenFilePathDialog("Perhaps Project Files (*.phproject)|*.phproject");
+                if (path != null)
+                {
+                    if (!ProjectManager.OpenProject(path))
+                    {
+                        Console.WriteLine("ProjectManager error: " + ProjectManager.ErrorString);
+                    }
+
+                    projectTitle = defaultTitle;
+                }
+            }
+
+            ImGui.Separator();
+            ImGui.BulletText("Recent Projects:");
+
+            PerhapsProject[] projects = ProjectManager.GetRecentProjects();
+            ImGui.Separator();
+            for (int i = 0; i < projects.Length; i++)
+            {
+                PerhapsProject project = projects[i];
+
+                ImGui.PushItemWidth(-1);
+                if (ImGui.Button($"{project.ProjectTitle}\n{project.ProjectPath}\nTime Created: {project.timeCreated.ToString()}"))
+                {
+                    ProjectManager.OpenProject(project.ProjectPath);
+                    break;
+                }
+                ImGui.PopItemWidth();
+
+                ImGui.Separator();
+            }
+
+        }
+
+        void RenderOngoingProject()
+        {
+            ImGui.BulletText("Project Name:");
+            ImGui.SameLine();
+            ImGui.Text(ProjectManager.CurrentProject.ProjectTitle);
         }
 
         void RenderSceneWindow()
@@ -124,7 +231,7 @@ namespace Perhaps.Engine
 
         }
 
-        string currentDir = "D:\\Dev\\Dev\\PerhapsEngine\\PerhapsEngineNative\\Build-Debug-Bin";
+        string fileSystemBrowsedDirectory;
         int selectedIndex = -1;
         bool pathHasChanged = true;
         void RenderFilesystemWindow()
@@ -133,13 +240,13 @@ namespace Perhaps.Engine
             //ImGui.Text(currentDir);
 
             ImGui.PushItemWidth(-1);
-            if (ImGui.InputText("dirInput", ref currentDir))
+            if (ImGui.InputText("dirInput", ref fileSystemBrowsedDirectory))
             {
 
             }
 
             ImGui.PopItemWidth();
-            RenderDirectoryRecursive(currentDir, true);
+            RenderDirectoryRecursive(fileSystemBrowsedDirectory, true);
 
 
             ImGui.End();
@@ -204,6 +311,7 @@ namespace Perhaps.Engine
             }
         }
 
+        static string renameFileText;
         void RenderFile(string fileName, string fullPath, int index)
         {
             ImGui.PushId(fileName);
@@ -220,15 +328,39 @@ namespace Perhaps.Engine
             }
             if (ImGui.BeginPopup("file_popup"))
             {
-                ImGui.MenuItem(fileName);
+                ImGui.BulletText(fileName);
+
+                bool renameChosen = false;
                 if (ImGui.MenuItem("Rename"))
                 {
-
+                    renameFileText = fileName;
+                    renameChosen = true;
                 }
 
                 if (ImGui.MenuItem("Delete"))
                 {
+                    EditorActions.DeleteFile(fullPath);
+                }
 
+                ImGui.EndPopup();
+
+                if (renameChosen)
+                {
+                    ImGui.CloseCurrentPopup();
+                    ImGui.OpenPopup("renamepop");
+                }
+            }
+
+            if (ImGui.BeginPopup("renamepop"))
+            {
+                ImGui.BulletText("Rename:");
+                ImGui.Separator();
+                ImGui.InputText("##label", ref renameFileText);
+
+                if (MonoApplication.instance.nativeApp.window.IsKeyTapped(KeyCode.Enter))
+                {
+                    EditorActions.RenameFile(fullPath, renameFileText);
+                    ImGui.CloseCurrentPopup();
                 }
 
                 ImGui.EndPopup();

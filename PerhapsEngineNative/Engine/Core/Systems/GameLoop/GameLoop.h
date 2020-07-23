@@ -1,61 +1,82 @@
-#ifndef PERHAPS_MANAGED_BINDING
-#define PERHAPS_MANAGED_BINDING
+#ifndef PERHAPS_GAMELOOP
+#define PERHAPS_GAMELOOP
 #include "../../PerhapsPch.h"
+
+/*
 #include "../MonoBindings/MonoHaps.h"
 #include "../Graphics/Graphics.h"
 #include "../Graphics/Rendererbase.h"
 #include "../Graphics/Renderer2D.h"
 #include "../Graphics/ScreenQuadRenderer.h"
 #include "../Graphics/ImGui/RendererImGui.h"
+#include "Scene.h"
+*/
 
 namespace Perhaps
 {
 	class ScreenQuadRenderer;
 
+	/// <summary>
+	/// Encapsulates the runtime loop.
+	/// May be implemented differently depending on the platform.
+	/// </summary>
 	class GameLoop
 	{
 	public:
+		void Initialize();
+		void Update();
+		void CleanUp();
 
-		static void Init()
-		{
-			renderer2D = new Renderer2D();
-			scr = new ScreenQuadRenderer();
-			mainRt = new RenderTexture(1280, 720);
-			imguiRenderer = new RendererImGui();
-
-			mainRt->AttachColorTexture();
-			mainRt->AttachDepthStencilBuffer();
+		/*
+			GameLoop()
+			{
 
 
-			RendererBase::RegisterRenderer(renderer2D, 1);
+			void Initialize()
+			{
+				renderer2D = new Renderer2D();
+				scr = new ScreenQuadRenderer();
+				mainRt = new RenderTexture(1280, 720);
+				imguiRenderer = new RendererImGui();
 
-			#ifdef _DEBUG
-			RendererBase::RegisterRenderer(imguiRenderer, 3);
-			#else
-			RendererBase::RegisterRenderer(scr, 2);
-			#endif
+				mainRt->AttachColorTexture();
+				mainRt->AttachDepthStencilBuffer();
 
-			MonoHaps::InitializeMono();
-		}
 
-		static void OnUpdate()
-		{
-			MonoHaps::UpdateManaged();
-			RendererBase::RunRenderers(*mainRt);
-		}
+				RendererBase::RegisterRenderer(renderer2D, 1);
 
-		static void Cleanup()
-		{
-			RendererBase::Cleanup();
-			delete(renderer2D);
-			delete(scr);
-			delete(imguiRenderer);
-		}
-	private:
-		static RenderTexture* mainRt;
-		static Renderer2D* renderer2D;
-		static ScreenQuadRenderer* scr;
-		static RendererImGui* imguiRenderer;
+				#ifdef _DEBUG
+				RendererBase::RegisterRenderer(imguiRenderer, 3);
+				#else
+				RendererBase::RegisterRenderer(scr, 2);
+				#endif
+
+				MonoHaps::InitializeMono();
+				scene.Initialize();
+			}
+
+			void OnUpdate()
+			{
+				//MonoHaps::UpdateManaged();
+				RendererBase::RunRenderers(*mainRt);
+				scene.Update();
+			}
+
+			void Cleanup()
+			{
+				RendererBase::Cleanup();
+				delete(renderer2D);
+				delete(scr);
+				delete(imguiRenderer);
+			}
+		private:
+
+			RenderTexture* mainRt;
+			Renderer2D* renderer2D;
+			ScreenQuadRenderer* scr;
+			RendererImGui* imguiRenderer;
+			Scene scene;
+			*/
 	};
 }
 

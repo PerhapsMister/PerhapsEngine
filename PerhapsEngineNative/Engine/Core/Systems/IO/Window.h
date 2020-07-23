@@ -12,7 +12,9 @@ namespace Perhaps
 	{
 	public:
 
-		static Window* CreateWindow(int startWidth, int startHeight, const char* title);
+		static Window* Create(int startWidth, int startHeight, const char* title);
+		static void Destroy(Window* window);
+
 
 		bool WindowCloseRequested();
 		void PollEvents();

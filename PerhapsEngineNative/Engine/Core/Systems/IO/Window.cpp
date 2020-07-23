@@ -5,12 +5,17 @@
 
 namespace Perhaps
 {
-	Window* Window::CreateWindow(int startWidth, int startHeight, const char* title)
+	Window* Window::Create(int startWidth, int startHeight, const char* title)
 	{
 		Window* window = new Window(startWidth, startHeight, title);
 		activeWindows.insert(std::make_pair(window->glfwWindow, window));
 
 		return window;
+	}
+
+	void Window::Destroy(Window* window)
+	{
+		delete(window);
 	}
 
 	Window::Window(int width, int height, const char* title) : mWidth(width), mHeight(height)

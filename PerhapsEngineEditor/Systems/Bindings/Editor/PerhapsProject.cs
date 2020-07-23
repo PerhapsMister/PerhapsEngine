@@ -13,33 +13,13 @@ namespace Perhaps.Engine.Editor
     {
         public Guid projectGuid { get; private set; }
         public string ProjectTitle { get; set; }
-        public string ProjectPath { get; private set; }
-
-        [JsonIgnore]
-        public string ProjectDirectory
-        {
-            get
-            {
-                int last = ProjectPath.LastIndexOf("\\");
-                return ProjectPath.Substring(0, last);
-            }
-        }
-
         public DateTime timeCreated { get; private set; }
 
-        public PerhapsProject(string projectPath)
+        public PerhapsProject()
         {
             projectGuid = Guid.NewGuid();
             ProjectTitle = "A Perhaps Project.";
-            ProjectPath = projectPath;
             timeCreated = DateTime.Now;
         }
-
-        public void Save()
-        {
-            string jsonString = JsonConvert.SerializeObject(this);
-            File.WriteAllText(ProjectPath, jsonString);
-        }
-
     }
 }

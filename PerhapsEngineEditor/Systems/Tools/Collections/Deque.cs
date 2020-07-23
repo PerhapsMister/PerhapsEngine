@@ -6,6 +6,16 @@ using System.Text;
 
 namespace System.Collections.Generic
 {
+
+    public static class IEnumeableExt
+    {
+        public static Deque<T> ToDeque<T>(this IEnumerable<T> ienum)
+        {
+            return new Deque<T>(ienum);
+        }
+
+    }
+
     /// <summary>
     /// A genetic Deque class. It can be thought of as
     /// a double-ended queue, hence Deque. This allows for

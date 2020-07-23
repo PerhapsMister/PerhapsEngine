@@ -17,6 +17,8 @@ namespace Perhaps.Engine.Editor
         public override void OnInitialize()
         {
             EditorActions.Initialize();
+
+            ecsContext = ECSContext.CreateContext();
         }
 
         public override void ShutDown()
@@ -24,9 +26,15 @@ namespace Perhaps.Engine.Editor
             
         }
 
-        public override void Update()
+        struct FooComponent
         {
             
+        }
+
+        ECSContext ecsContext;
+        public override void Update()
+        {
+
         }
 
         EditorRenderer editorRenderer;

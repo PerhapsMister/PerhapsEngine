@@ -8,59 +8,55 @@ namespace Perhaps.Engine.Editor
 {
     public static class ProjectManager
     {
-        public static PerhapsProject CurrentProject { get; private set; }
+        public static FileObject<PerhapsProject> CurrentProjectFile { get; private set; }
+        public static PerhapsProject CurrentProject
+        {
+            get
+            {
+                if (CurrentProjectFile == null)
+                    return null;
+
+                return CurrentProjectFile.Object;
+            }
+        }
 
         public static string ErrorString { get; private set; }
 
         public static bool OpenProject(string filePath)
         {
-            if (!File.Exists(filePath))
+            FileObject<PerhapsProject> proj = new FileObject<PerhapsProject>(filePath);
+
+            if (proj.Load())
             {
-                ErrorString = $"Invalid filepath {filePath}";
-                return false;
+                CurrentProjectFile = proj;
+                AppendRecentProject(filePath);
+
+                return true;
             }
 
-            PerhapsProject project = LoadProject(filePath);
-            if (project == null)
-            {
-                ErrorString = $"Failed to parse file {filePath}";
-                return false;
-            }
-            CurrentProject = project;
-            AppendRecentProject(filePath);
-
-            return true;
+            return false;
         }
 
+        public const string projectFileExtension = ".phproject";
         public static bool CreateProject(string directoryPath, string projectTitle)
         {
-            if (!Directory.Exists(directoryPath))
+            PerhapsProject proj = new PerhapsProject();
+            proj.ProjectTitle = projectTitle;
+
+            string project_path = $"{directoryPath}\\{projectTitle}{projectFileExtension}";
+            FileObject<PerhapsProject> projFile = new FileObject<PerhapsProject>(project_path, proj);
+
+            if (!projFile.Save())
             {
-                ErrorString = $"Directory invalid: {directoryPath}";
+                Console.WriteLine("ProjectManager error: " + projFile.ErrorString);
+
                 return false;
             }
-            string projectPath = $"{directoryPath}\\{projectTitle}.phproject";
 
-            PerhapsProject project = new PerhapsProject(projectPath);
-            project.ProjectTitle = projectTitle;
+            AppendRecentProject(project_path);
 
-            Console.WriteLine(project.ProjectDirectory);
-
-            project.Save();
-            CurrentProject = project;
-            AppendRecentProject(projectPath);
-
+            CurrentProjectFile = projFile;
             return true;
-        }
-
-        static PerhapsProject LoadProject(string path)
-        {
-            if (!File.Exists(path))
-                return null;
-
-            string jsonProj = File.ReadAllText(path);
-            PerhapsProject project = JsonConvert.DeserializeObject<PerhapsProject>(jsonProj);
-            return project;
         }
 
         public static string PersistentDataPath
@@ -77,73 +73,65 @@ namespace Perhaps.Engine.Editor
             }
         }
 
-        [System.Serializable]
-        class RecentProjects
+
+        static void AppendRecentProject(string path)
+        {
+            FileObject<RecentProjectsContainer> container = 
+                new FileObject<RecentProjectsContainer>(recentProjFilePath);
+
+            if (!container.Load())
+            {
+                container.Object = new RecentProjectsContainer();
+            }
+
+            container.Object.recentProjectPaths.AddFront(path);
+            container.Object.recentProjectPaths = container.Object.recentProjectPaths.Distinct().ToDeque();
+
+            container.Save();
+        }
+
+
+        [Serializable]
+        class RecentProjectsContainer
         {
             public Deque<string> recentProjectPaths = new Deque<string>();
         }
 
-        static void AppendRecentProject(string path)
+
+        static string recentProjFilePath = $"{PersistentDataPath}\\RecentProjects.json";
+        static FileObject<PerhapsProject>[] cachedRecentProjects;
+        public static FileObject<PerhapsProject>[] GetRecentProjects()
         {
-            string recentProjFile = $"{PersistentDataPath}\\RecentProjects.json";
+            if (cachedRecentProjects != null)
+                return cachedRecentProjects;
 
-            RecentProjects recent = new RecentProjects();
-            if (File.Exists(recentProjFile))
+            FileObject<RecentProjectsContainer> recentProjectsFile =
+                new FileObject<RecentProjectsContainer>(recentProjFilePath);
+
+            if (recentProjectsFile.Load())
             {
-                string jsonStr = File.ReadAllText(recentProjFile);
-                recent = JsonConvert.DeserializeObject<RecentProjects>(jsonStr);
-            }
+                List<FileObject<PerhapsProject>> loaded = new List<FileObject<PerhapsProject>>();
+                Deque<string> paths = recentProjectsFile.Object.recentProjectPaths;
 
-            if(recent.recentProjectPaths.Contains(path))
-            {
-                recent.recentProjectPaths.Remove(path);
-            }
-            recent.recentProjectPaths.AddFront(path);
+                for (int i = 0; i < paths.Count; i++)
+                {
+                    FileObject<PerhapsProject> file = new FileObject<PerhapsProject>(paths[i]);
 
-            string str = JsonConvert.SerializeObject(recent);
-            File.WriteAllText(recentProjFile, str);
-            recentProjects = null;
-        }
+                    if(file.Load())
+                    {
+                        loaded.Add(file);
+                    }
+                }
 
-
-        static PerhapsProject[] recentProjects;
-        public static PerhapsProject[] GetRecentProjects()
-        {
-            if (recentProjects != null)
-                return recentProjects;
-
-            string recentProjFile = $"{PersistentDataPath}\\RecentProjects.json";
-            if (!File.Exists(recentProjFile))
-            {
-                recentProjects = new PerhapsProject[0];
-                return recentProjects;
-            }
-
-            string recentJson = File.ReadAllText(recentProjFile);
-            RecentProjects projs = JsonConvert.DeserializeObject<RecentProjects>(recentJson);
-            if (projs == null)
-            {
-                recentProjects = new PerhapsProject[0];
+                cachedRecentProjects = loaded.ToArray();
+                recentProjectsFile.Save();
             }
             else
             {
-                List<PerhapsProject> recentProjectsList = new List<PerhapsProject>();
-                List<string> pathsToCleanup = new List<string>();
-                for (int i = 0; i < projs.recentProjectPaths.Count; i++)
-                {
-                    PerhapsProject proj = LoadProject(projs.recentProjectPaths[i]);
-                    if (proj == null)
-                    {
-                        pathsToCleanup.Add(projs.recentProjectPaths[i]);
-                        continue;
-                    }
-                    recentProjectsList.Add(proj);
-                }
-
-                recentProjects = recentProjectsList.ToArray();
+                cachedRecentProjects = new FileObject<PerhapsProject>[0];
             }
 
-            return recentProjects;
+            return cachedRecentProjects;
         }
     }
 }

@@ -106,7 +106,7 @@ namespace Perhaps.Engine
 
                 if(ProjectManager.CurrentProject != null)
                 {
-                    fileSystemBrowsedDirectory = ProjectManager.CurrentProject.ProjectDirectory;
+                    fileSystemBrowsedDirectory = ProjectManager.CurrentProjectFile.FileDirectory;
                 }
             }
             else
@@ -157,16 +157,17 @@ namespace Perhaps.Engine
             ImGui.Separator();
             ImGui.BulletText("Recent Projects:");
 
-            PerhapsProject[] projects = ProjectManager.GetRecentProjects();
+            FileObject<PerhapsProject>[] projects = ProjectManager.GetRecentProjects();
             ImGui.Separator();
             for (int i = 0; i < projects.Length; i++)
             {
-                PerhapsProject project = projects[i];
+                FileObject<PerhapsProject> projectFile = projects[i];
+                PerhapsProject project = projectFile.Object;
 
                 ImGui.PushItemWidth(-1);
-                if (ImGui.Button($"{project.ProjectTitle}\n{project.ProjectPath}\nTime Created: {project.timeCreated.ToString()}"))
+                if (ImGui.Button($"{project.ProjectTitle}\n{projectFile.FilePath}\nTime Created: {project.timeCreated.ToString()}"))
                 {
-                    ProjectManager.OpenProject(project.ProjectPath);
+                    ProjectManager.OpenProject(projectFile.FilePath);
                     break;
                 }
                 ImGui.PopItemWidth();
@@ -233,7 +234,6 @@ namespace Perhaps.Engine
 
         string fileSystemBrowsedDirectory;
         int selectedIndex = -1;
-        bool pathHasChanged = true;
         void RenderFilesystemWindow()
         {
             ImGui.Begin("FileSystem", ref filesystemWindow);

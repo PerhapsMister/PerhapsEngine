@@ -1,4 +1,14 @@
 #include "Application.h"
+#include "Systems/MonoBindings/ManagedRuntime.h"
+
+#include "Systems/GameLoop/GameLoop.h"
+#include "Systems/GameLoop/Scene.h"
+
+#include "Systems/Graphics/Graphics.h"
+#include "Systems/Graphics/Rendererbase.h"
+#include "Systems/Graphics/Renderer2D.h"
+#include "Systems/Graphics/ScreenQuadRenderer.h"
+#include "Systems/Graphics/ImGui/RendererImGui.h"
 
 namespace Perhaps
 {
@@ -15,6 +25,8 @@ namespace Perhaps
 		size_t index = pathArg.find_last_of("\\");
 		pathArg.erase(pathArg.begin() + index, pathArg.end());
 		conlog("Executing directory: " << pathArg);
+		app.executingDirectory = pathArg;
+
 		app.arguments.erase(app.arguments.begin());
 
 		instance = &app;
@@ -36,22 +48,27 @@ namespace Perhaps
 		return instance;
 	}
 
+	
+	const int width = 1280, height = 720;
+	const char* title = "Perhaps Engine";
 	void Application::Begin()
 	{
-		const int width = 1280, height = 720;
-		const char* title = "Perhaps Engine";
-
-		mainWindow = Window::CreateWindow(width, height, title);
-		GameLoop::Init();
+		mainWindow = Window::Create(width, height, title);
+		
+		GameLoop gameloop;
+		gameloop.Initialize();
 
 		while (!mainWindow->WindowCloseRequested())
 		{
 			mainWindow->PollEvents();
-			GameLoop::OnUpdate();
+
+			gameloop.Update();
+
 			mainWindow->SwapBuffers();
 		}
 
-		GameLoop::Cleanup();
+		gameloop.CleanUp();
+		Window::Destroy(mainWindow);
 	}
 
 	Window* Application::GetWindow()
